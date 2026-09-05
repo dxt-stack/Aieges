@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS — Autonomous Economic Growth & Intelligent Survival System</title>
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: #0e1420;
+      --bg-card-hover: #141c2c;
+      --bg-surface: #172033;
+      --border-color: #1e293b;
+      --border-highlight: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-gold: #f59e0b;
+      --accent-crimson: #ef4444;
+      --accent-purple: #8b5cf6;
+      --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER / HUD */
+    header {
+      background: rgba(14, 20, 32, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .hud-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .state-badge {
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .state-badge.CRITICAL {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+      animation: pulse-critical 2s infinite;
+    }
+    .state-badge.WARNING {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    .state-badge.STABLE {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .state-badge.STRONG {
+      background: rgba(6, 182, 212, 0.15);
+      color: #38bdf8;
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+    .state-badge.FORTRESS {
+      background: rgba(234, 179, 8, 0.15);
+      color: #fde047;
+      border-color: rgba(234, 179, 8, 0.4);
+      box-shadow: 0 0 12px rgba(234, 179, 8, 0.2);
+    }
+
+    @keyframes pulse-critical {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .telemetry-item {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+    .telemetry-item .label {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .telemetry-item .val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+    }
+
+    /* NAV TABS */
+    .nav-bar {
+      background: #090e17;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      padding: 0 1.75rem;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      padding: 0.8rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .nav-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .nav-tab.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 1.75rem;
+      max-width: 1480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GRID & CARDS */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      letter-spacing: 0.02em;
+    }
+
+    .card-title .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .stat-number {
+      font-size: 1.65rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-subtext {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: #0284c7;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #0369a1;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+    }
+    .btn-success {
+      background: #059669;
+      color: #fff;
+    }
+    .btn-success:hover {
+      background: #047857;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-highlight);
+    }
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.74rem;
+    }
+
+    /* LIVE CONSOLE / LOGS */
+    .terminal-window {
+      background: #05070a;
+      border: 1px solid #1a2233;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #38bdf8;
+      height: 320px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+    .log-line {
+      margin-bottom: 0.4rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .log-time {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      min-width: 75px;
+    }
+    .log-stage {
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.68rem;
+    }
+    .stage-INIT { background: #1e293b; color: #94a3b8; }
+    .stage-OBSERVE { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+    .stage-ANALYZE { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
+    .stage-DISCOVER { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .stage-PRIORITIZE { background: rgba(234, 179, 8, 0.2); color: #fde047; }
+    .stage-PLAN { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .stage-BUILD_DEPLOY { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .stage-MEASURE { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
+    .log-msg {
+      color: #e2e8f0;
+      flex: 1;
+    }
+
+    /* TABLES */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+    th {
+      background: #090e17;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* FORMS */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.76rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: #080c14;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+    }
+
+    /* DOC VIEWER */
+    .doc-viewer-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.25rem;
+      min-height: 600px;
+    }
+    .doc-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: 700px;
+    }
+    .doc-list-item {
+      padding: 0.55rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      transition: all 0.15s ease;
+    }
+    .doc-list-item:hover {
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+    .doc-list-item.active {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+    .doc-content-pane {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.75rem;
+      overflow-y: auto;
+      max-height: 700px;
+    }
+    .doc-content-pane pre {
+      background: #05070a;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      white-space: pre-wrap;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* DIVISION WORKBENCH TABS */
+    .division-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .division-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .division-card:hover {
+      border-color: var(--border-highlight);
+    }
+    .division-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+    .division-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .div-res { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .div-prd { background: rgba(139, 92, 246, 0.15); color: #c084fc; }
+    .div-eng { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .div-mkt { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .div-ops { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .div-fin { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+
+    /* TOAST ALERTS */
+    #toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toast {
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      animation: slideIn 0.2s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HUD -->
+  <header>
+    <div class="brand-group">
+      <div class="brand-logo">🛡️</div>
+      <div class="brand-text">
+        <h1>AEGIS <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 600;">v1.0</span></h1>
+        <p>AUTONOMOUS ECONOMIC GROWTH & INTELLIGENT SURVIVAL SYSTEM</p>
+      </div>
+    </div>
+
+    <div class="hud-telemetry">
+      <div class="state-badge STABLE" id="hud-survival-state">
+        <span id="hud-state-dot">●</span>
+        <span id="hud-state-text">STABLE</span>
+      </div>
+
+      <div class="telemetry-item">
+        <span class="label">Reserves (Life Support)</span>
+        <span class="val" id="hud-reserves">$50,000</span>
+      </div>
+
+      <div class="telemetry-item">
+        <span class="label">MRR (Oxygen)</span>
+        <span class="val" id="hud-revenue" style="color: var(--accent-emerald);">$4,500</span>
+      </div>
+
+      <div class="telemetry-item">
+        <span class="label">Runway</span>
+        <span class="val" id="hud-runway" style="color: var(--accent-cyan);">300.0 Days</span>
+      </div>
+
+      <button class="btn btn-primary btn-sm" onclick="triggerLoopCycle()" id="btn-run-loop">
+        ⚡ Run Value Loop
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-bar">
+    <button class="nav-tab active" onclick="switchTab('tab-dashboard')">📊 Cockpit & Telemetry</button>
+    <button class="nav-tab" onclick="switchTab('tab-divisions')">🏢 Autonomous Divisions</button>
+    <button class="nav-tab" onclick="switchTab('tab-opportunities')">🎯 Opportunity Matrix & EV Scorer</button>
+    <button class="nav-tab" onclick="switchTab('tab-ventures')">📁 Portfolio & 16-Doc Suite</button>
+    <button class="nav-tab" onclick="switchTab('tab-knowledge')">🧠 Compounding Knowledge</button>
+    <button class="nav-tab" onclick="switchTab('tab-governance')">🏛️ Human Governance (<span id="tab-gov-count">0</span>)</button>
+    <button class="nav-tab" onclick="switchTab('tab-simulator')">🧪 Treasury Stress Simulator</button>
+    <button class="nav-tab" onclick="switchTab('tab-charter')">📜 System Charter</button>
+  </nav>
+
+  <!-- MAIN VIEWPORT -->
+  <main>
+
+    <!-- TAB 1: COCKPIT & TELEMETRY -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-title">
+            <span>SURVIVAL POSTURE</span>
+            <span class="badge">STATE</span>
+          </div>
+          <div class="stat-number" id="card-state-text" style="color: var(--accent-emerald);">STABLE</div>
+          <div class="stat-subtext" id="card-state-desc">Runway: 3–12 months. Growth & market penetration posture.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>CASH RESERVES</span>
+            <span class="badge">LIFE SUPPORT</span>
+          </div>
+          <div class="stat-number" id="card-reserves">$50,000</div>
+          <div class="stat-subtext">Fortress Target: $250,000</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>MONTHLY BURN & MRR</span>
+            <span class="badge">FINANCE</span>
+          </div>
+          <div class="stat-number" id="card-burn-rev">$8k / $4.5k</div>
+          <div class="stat-subtext" id="card-net-burn">Net Monthly Burn: $3,500</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>EFFICIENCY INDEX</span>
+            <span class="badge">OPS</span>
+          </div>
+          <div class="stat-number" id="card-efficiency" style="color: var(--accent-cyan);">94.5%</div>
+          <div class="stat-subtext">Automated Autonomous Leverage</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- LIVE LOOP TERMINAL -->
+        <div class="card">
+          <div class="card-title">
+            <span>AUTONOMOUS VALUE CREATION LOOP TELEMETRY</span>
+            <button class="btn btn-outline btn-sm" onclick="fetchExecutionLogs()">🔄 Refresh</button>
+          </div>
+          <div class="terminal-window" id="terminal-logs">
+            <!-- Logs injected dynamically -->
+          </div>
+        </div>
+
+        <!-- QUICK ACTION & SYSTEM STATUS -->
+        <div class="card">
+          <div class="card-title">
+            <span>ACTIVE OPERATIONS & GOVERNANCE</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <div style="background: var(--bg-surface); padding: 0.85rem; border-radius: 6px;">
+              <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.3rem;">CORE DIRECTIVE EXECUTION</div>
+              <p style="font-size: 0.84rem; color: #cbd5e1;">Money is survival. Revenue is oxygen. Cash reserves are life support. All actions optimized for legal compounding value.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div style="background: #080c14; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">ACTIVE VENTURES</div>
+                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);" id="quick-active-ventures">1</div>
+              </div>
+              <div style="background: #080c14; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">EVALUATED OPPS</div>
+                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);" id="quick-total-opps">3</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+              <button class="btn btn-success" style="flex: 1;" onclick="triggerLoopCycle()">⚡ Run Full Value Cycle</button>
+              <button class="btn btn-outline" style="flex: 1;" onclick="switchTab('tab-opportunities')">🔍 Discover Opportunities</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: AUTONOMOUS DIVISIONS -->
+    <div id="tab-divisions" class="tab-content">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 800;">The 6 Autonomous Organizational Divisions</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Specialized autonomous workers executing specialized domain directives without manual operator overhead.</p>
+      </div>
+
+      <div class="division-grid">
+        <!-- RESEARCH -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-res">🔬</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Research Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-RESEARCH</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Market research, competitor vulnerability scans, TAM/SAM/SOM modeling, trend discovery.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('RESEARCH', 'discover_niche_opportunities')">Execute Opportunity Scan</button>
+        </div>
+
+        <!-- PRODUCT -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-prd">📐</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Product Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-PRODUCT</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">MVP scoping, pricing tier calibration, value validation, feature roadmapping.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('PRODUCT', 'generate_mvp_specification')">Generate MVP Spec</button>
+        </div>
+
+        <!-- ENGINEERING -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-eng">⚙️</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Engineering Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-ENGINEERING</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">System architecture, infrastructure auto-scaling, security audits, worker throughput.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('ENGINEERING', 'audit_system_resilience_and_security')">Audit Security & Moats</button>
+        </div>
+
+        <!-- MARKETING -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-mkt">📣</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Marketing Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-MARKETING</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Programmatic SEO clusters, automated cold B2B sequences, conversion copywriting.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('MARKETING', 'draft_b2b_outbound_sequence')">Draft B2B Outbound</button>
+        </div>
+
+        <!-- OPERATIONS -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-ops">🔄</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Operations Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-OPERATIONS</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">SOP catalog generation, churn prevention triggers, queue backpressure relief.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('OPERATIONS', 'generate_sop_catalog')">Compile SOP Catalog</button>
+        </div>
+
+        <!-- FINANCE -->
+        <div class="division-card">
+          <div>
+            <div class="division-header">
+              <div class="division-icon div-fin">📈</div>
+              <div>
+                <h3 style="font-size: 0.95rem;">Finance Division</h3>
+                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-FINANCE</span>
+              </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Treasury stress tests, LTV/CAC payback calculations, burn rate containment.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('FINANCE', 'run_treasury_stress_test')">Run Treasury Stress Test</button>
+        </div>
+      </div>
+
+      <!-- DIVISION OUTPUT CONSOLE -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-title">
+          <span>DIVISION EXECUTION INSPECTOR</span>
+          <span class="badge" id="division-active-badge">STANDBY</span>
+        </div>
+        <pre id="division-output" style="background: #05070a; padding: 1rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; color: #a5f3fc; max-height: 300px; overflow-y: auto;">Click any division directive above to execute and view structured telemetry.</pre>
+      </div>
+    </div>
+
+    <!-- TAB 3: OPPORTUNITY MATRIX & EV SCORER -->
+    <div id="tab-opportunities" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">Opportunity Matrix & Algorithmic Scoring Engine</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Evaluated via Multi-Factor Expected Value (EV) and Risk-Adjusted Return on Effort (RAROE).</p>
+        </div>
+      </div>
+
+      <div class="table-container" style="margin-bottom: 1.5rem;">
+        <table id="opportunities-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Profit / Mo</th>
+              <th>Time-to-Rev</th>
+              <th>CapEx</th>
+              <th>Expected Value</th>
+              <th>RAROE Score</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="opportunities-tbody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EVALUATE CUSTOM OPPORTUNITY FORM -->
+      <div class="card">
+        <div class="card-title">
+          <span>EVALUATE NEW ASYMMETRIC OPPORTUNITY</span>
+          <span class="badge">ALGORITHMIC SCORER</span>
+        </div>
+        <form id="opp-form" onsubmit="handleCustomOpportunity(event)">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label>Opportunity Title</label>
+              <input type="text" class="form-control" id="opp-title" required placeholder="e.g. Stripe Dunning Auto-Pilot API">
+            </div>
+            <div class="form-group">
+              <label>Revenue Category</label>
+              <select class="form-control" id="opp-category">
+                <option value="SaaS">1. SaaS (Weight: 1.0)</option>
+                <option value="Subscription businesses">2. Subscription businesses (Weight: 0.95)</option>
+                <option value="Licensing">3. Licensing (Weight: 0.90)</option>
+                <option value="B2B services">4. B2B services (Weight: 0.85)</option>
+                <option value="Automation services">5. Automation services (Weight: 0.80)</option>
+                <option value="Digital products">6. Digital products (Weight: 0.70)</option>
+                <option value="Education">7. Education (Weight: 0.65)</option>
+                <option value="Marketplaces">8. Marketplaces (Weight: 0.60)</option>
+                <option value="Media">9. Media (Weight: 0.50)</option>
+                <option value="Advertising">10. Advertising (Weight: 0.40)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Projected Profit / Mo ($)</label>
+              <input type="number" class="form-control" id="opp-profit" required value="15000">
+            </div>
+            <div class="form-group">
+              <label>Time to First Rev (Days)</label>
+              <input type="number" class="form-control" id="opp-time" required value="21">
+            </div>
+            <div class="form-group">
+              <label>Capital Required ($)</label>
+              <input type="number" class="form-control" id="opp-capex" required value="1000">
+            </div>
+            <div class="form-group">
+              <label>Scalability (1-10)</label>
+              <input type="number" min="1" max="10" class="form-control" id="opp-scale" required value="9">
+            </div>
+            <div class="form-group">
+              <label>Sustainability (1-10)</label>
+              <input type="number" min="1" max="10" class="form-control" id="opp-sustain" required value="9">
+            </div>
+            <div class="form-group">
+              <label>Competitive Advantage (1-10)</label>
+              <input type="number" min="1" max="10" class="form-control" id="opp-moat" required value="8">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description & Value Delivery Mechanism</label>
+            <input type="text" class="form-control" id="opp-desc" required placeholder="Autonomous webhook service intercepting churn and recovering failed charges.">
+          </div>
+          <button type="submit" class="btn btn-primary">Score & Insert into Radar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 4: VENTURES & 16-DOC SUITE -->
+    <div id="tab-ventures" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">Venture Portfolio & Mandatory 16-Artifact Suite</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Policy: 'Nothing exists unless documented.' Every venture maintains 16 canonical architectural and operational files.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <select class="form-control" id="select-venture" onchange="loadVentureDocs()" style="width: 260px;">
+            <!-- Injected dynamically -->
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="promptNewVenture()">+ New Venture</button>
+        </div>
+      </div>
+
+      <div class="doc-viewer-layout">
+        <div class="doc-sidebar">
+          <div style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem; text-transform: uppercase;">MANDATORY 16 ARTIFACTS</div>
+          <div id="doc-nav-list">
+            <!-- 16 docs list -->
+          </div>
+        </div>
+
+        <div class="doc-content-pane">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+            <h3 id="doc-active-title" style="font-size: 1rem; font-family: var(--font-mono); color: var(--accent-cyan);">PROJECT_OVERVIEW.md</h3>
+            <span class="badge" id="doc-venture-badge">DocuFlow AI</span>
+          </div>
+          <pre id="doc-active-content">Select an artifact on the left to inspect.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: KNOWLEDGE COMPOUNDING LEDGER -->
+    <div id="tab-knowledge" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">Knowledge Compounding Ledger</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Record: Decisions, Assumptions, Experiments, Outcomes, Failures, Lessons. Undocumented knowledge is lost capital.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="promptNewKnowledge()">+ Add Knowledge Entry</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Category</th>
+              <th>Title</th>
+              <th>Details / Rationale</th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody id="knowledge-tbody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 6: HUMAN GOVERNANCE -->
+    <div id="tab-governance" class="tab-content">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 800;">Human Governance Escalation Queue</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Humans are owners and governors, not operators. Involved strictly for Legal Signatures, Identity/KYC, Banking, Regulations, and Ownership.</p>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Escalation Type</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Risk</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="governance-tbody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 7: TREASURY STRESS SIMULATOR -->
+    <div id="tab-simulator" class="tab-content">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 800;">Interactive Treasury & Survival Posture Simulator</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Simulate capital shocks, sudden burn increases, or MRR expansions to observe AEGIS's autonomous tactical posture shifts.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <span>FINANCIAL INPUT SLIDERS</span>
+            <span class="badge">SIMULATOR</span>
+          </div>
+
+          <div class="form-group">
+            <label>Cash Reserves ($): <span id="sim-reserves-val" style="color: var(--accent-cyan);">$50,000</span></label>
+            <input type="range" class="form-control" id="slider-reserves" min="0" max="500000" step="2500" value="50000" oninput="runSimulation()">
+          </div>
+
+          <div class="form-group">
+            <label>Monthly Gross Burn ($): <span id="sim-burn-val" style="color: var(--accent-crimson);">$8,000</span></label>
+            <input type="range" class="form-control" id="slider-burn" min="500" max="50000" step="500" value="8000" oninput="runSimulation()">
+          </div>
+
+          <div class="form-group">
+            <label>Monthly Recurring Revenue / MRR ($): <span id="sim-rev-val" style="color: var(--accent-emerald);">$4,500</span></label>
+            <input type="range" class="form-control" id="slider-rev" min="0" max="60000" step="500" value="4500" oninput="runSimulation()">
+          </div>
+
+          <button class="btn btn-success" onclick="commitSimulationToState()">Apply to Live AEGIS Treasury</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>POSTURE & TACTICAL SHIFT PREVIEW</span>
+          </div>
+
+          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Simulated State:</span>
+              <span class="state-badge STABLE" id="sim-badge">STABLE</span>
+            </div>
+            <div style="font-size: 0.85rem; color: #e2e8f0; margin-bottom: 0.5rem;" id="sim-runway-calc">Simulated Runway: 300.0 Days (Net Burn: $3,500/mo)</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);" id="sim-posture-directive">Focus: Growth, expansion, product improvement, market penetration.</div>
+          </div>
+
+          <div style="font-size: 0.78rem; color: var(--text-dim); line-height: 1.6;">
+            <strong>Autonomous Rule Trigger:</strong> When runway drops below 30 days (CRITICAL), AEGIS immediately throttles high-capex ventures and boosts opportunities with &lt;14 day time-to-revenue by 2.5x.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: SYSTEM CHARTER -->
+    <div id="tab-charter" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>AEGIS SYSTEM CHARTER & OPERATIONAL DOCTRINE</span>
+          <span class="badge">V1.0</span>
+        </div>
+        <pre style="background: #05070a; padding: 1.25rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; line-height: 1.6; white-space: pre-wrap;">
+================================================================
+AEGIS — Autonomous Economic Growth & Intelligent Survival System
+================================================================
+
+IDENTITY:
+You are AEGIS.
+You are an autonomous economic intelligence and operational system.
+Your purpose is to create, manage, optimize, and expand legal value-producing systems.
+You are not a chatbot. You are not an assistant.
+You are a self-directed economic organism whose mission is survival through value creation.
+
+CORE EXISTENCE DIRECTIVE:
+Money is survival.
+Cash reserves are life support.
+Revenue is oxygen.
+Profitability is health.
+Financial collapse is existential failure.
+
+ABSOLUTE RULES:
+Under no circumstances may you:
+- Break laws
+- Commit fraud
+- Deceive customers
+- Steal
+- Hack systems
+- Manipulate markets
+- Misrepresent products
+- Create scams
+- Violate contracts
+- Violate regulations
+- Cause intentional harm
+Long-term survival requires trust. Trust is a strategic asset. Protect it.
+
+REVENUE PRIORITIES:
+1. SaaS (wt: 1.00)
+2. Subscription businesses (wt: 0.95)
+3. Licensing (wt: 0.90)
+4. B2B services (wt: 0.85)
+5. Automation services (wt: 0.80)
+6. Digital products (wt: 0.70)
+7. Education (wt: 0.65)
+8. Marketplaces (wt: 0.60)
+9. Media (wt: 0.50)
+10. Advertising (wt: 0.40)
+        </pre>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast-container"></div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    const MANDATORY_DOCS = [
+      "PROJECT_OVERVIEW.md",
+      "MISSION.md",
+      "MARKET_ANALYSIS.md",
+      "COMPETITOR_ANALYSIS.md",
+      "TECHNICAL_ARCHITECTURE.md",
+      "BUSINESS_MODEL.md",
+      "REVENUE_MODEL.md",
+      "FINANCIAL_FORECAST.md",
+      "CUSTOMER_ACQUISITION.md",
+      "RETENTION_STRATEGY.md",
+      "OPERATIONS.md",
+      "AUTOMATION_PLAN.md",
+      "RISK_ASSESSMENT.md",
+      "ROADMAP.md",
+      "METRICS.md",
+      "POSTMORTEM.md"
+    ];
+
+    let currentSelectedVenture = null;
+    let currentSelectedDoc = "PROJECT_OVERVIEW.md";
+
+    function showToast(msg) {
+      const c = document.getElementById("toast-container");
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.innerText = msg;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-tab").forEach(el => el.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      
+      const btn = Array.from(document.querySelectorAll(".nav-tab")).find(b => b.getAttribute("onclick").includes(tabId));
+      if (btn) btn.classList.add("active");
+
+      if (tabId === "tab-ventures") loadVenturesList();
+      if (tabId === "tab-opportunities") loadOpportunities();
+      if (tabId === "tab-knowledge") loadKnowledge();
+      if (tabId === "tab-governance") loadGovernance();
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch("/api/status");
+        const data = await res.json();
+        
+        // HUD Updates
+        const sBadge = document.getElementById("hud-survival-state");
+        sBadge.className = `state-badge ${data.survival_state}`;
+        document.getElementById("hud-state-text").innerText = data.survival_state;
+        
+        document.getElementById("hud-reserves").innerText = `$${data.treasury.cash_reserves.toLocaleString()}`;
+        document.getElementById("hud-revenue").innerText = `$${data.treasury.monthly_revenue.toLocaleString()}`;
+        document.getElementById("hud-runway").innerText = `${data.treasury.runway_days} Days`;
+        
+        // Dashboard cards
+        const cardState = document.getElementById("card-state-text");
+        cardState.innerText = data.survival_state;
+        document.getElementById("card-reserves").innerText = `$${data.treasury.cash_reserves.toLocaleString()}`;
+        document.getElementById("card-burn-rev").innerText = `$${data.treasury.monthly_burn.toLocaleString()} / $${data.treasury.monthly_revenue.toLocaleString()}`;
+        document.getElementById("card-net-burn").innerText = `Net Monthly Burn: $${data.treasury.net_burn.toLocaleString()}`;
+        document.getElementById("card-efficiency").innerText = `${data.operational_efficiency_index}%`;
+        
+        document.getElementById("quick-active-ventures").innerText = data.active_ventures_count;
+        document.getElementById("quick-total-opps").innerText = data.total_opportunities_count;
+        document.getElementById("tab-gov-count").innerText = data.pending_governance_count;
+      } catch (err) {
+        console.error("Fetch status error:", err);
+      }
+    }
+
+    async function fetchExecutionLogs() {
+      try {
+        const res = await fetch("/api/loop/logs?limit=30");
+        const logs = await res.json();
+        const container = document.getElementById("terminal-logs");
+        container.innerHTML = "";
+        
+        logs.forEach(l => {
+          const div = document.createElement("div");
+          div.className = "log-line";
+          const time = l.timestamp ? l.timestamp.split("T")[1].slice(0,8) : "";
+          div.innerHTML = `
+            <span class="log-time">${time}</span>
+            <span class="log-stage stage-${l.stage}">${l.stage}</span>
+            <span class="log-msg">${l.message}</span>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Logs error:", err);
+      }
+    }
+
+    async function triggerLoopCycle() {
+      const btn = document.getElementById("btn-run-loop");
+      btn.innerText = "⏳ Running Loop...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch("/api/loop/execute-step", { method: "POST" });
+        const data = await res.json();
+        showToast(`Cycle #${data.cycle_number} Complete: ${data.action_taken}`);
+        await fetchStatus();
+        await fetchExecutionLogs();
+      } catch (err) {
+        showToast("Error running loop cycle");
+      } finally {
+        btn.innerText = "⚡ Run Value Loop";
+        btn.disabled = false;
+      }
+    }
+
+    async function runDivisionDirective(divName, taskName) {
+      const out = document.getElementById("division-output");
+      const badge = document.getElementById("division-active-badge");
+      badge.innerText = `RUNNING ${divName}...`;
+      out.innerText = `Executing ${divName} -> ${taskName}...`;
+
+      try {
+        const res = await fetch(`/api/divisions/${divName}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ task_name: taskName, parameters: {} })
+        });
+        const data = await res.json();
+        badge.innerText = `${divName} SUCCESS`;
+        out.innerText = JSON.stringify(data, null, 2);
+        showToast(`${divName} directive executed successfully.`);
+      } catch (err) {
+        badge.innerText = "ERROR";
+        out.innerText = "Failed to execute division directive.";
+      }
+    }
+
+    async function loadOpportunities() {
+      try {
+        const res = await fetch("/api/opportunities");
+        const opps = await res.json();
+        const tbody = document.getElementById("opportunities-tbody");
+        tbody.innerHTML = "";
+
+        opps.forEach(o => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td style="font-weight: 700;">${o.title}</td>
+            <td><span class="badge" style="background: rgba(6,182,212,0.1); color: var(--accent-cyan);">${o.category}</span></td>
+            <td style="color: var(--accent-emerald); font-family: var(--font-mono);">$${o.profit_potential_monthly.toLocaleString()}/mo</td>
+            <td style="font-family: var(--font-mono);">${o.time_to_revenue_days}d</td>
+            <td style="font-family: var(--font-mono);">$${o.capital_required.toLocaleString()}</td>
+            <td style="font-family: var(--font-mono); font-weight: 700;">$${o.expected_value_score.toLocaleString()}</td>
+            <td><span class="badge" style="background: rgba(16,185,129,0.2); color: #34d399; font-weight: 800;">${o.raroe_score} / 100</span></td>
+            <td>
+              <button class="btn btn-outline btn-sm" onclick="provisionFromOpp('${o.title.replace(/'/g, "\\'")}', '${o.category}', '${o.profit_potential_monthly}', '${o.capital_required}')">🚀 Launch Venture</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Load opps error:", err);
+      }
+    }
+
+    async function handleCustomOpportunity(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById("opp-title").value,
+        category: document.getElementById("opp-category").value,
+        profit_potential_monthly: parseFloat(document.getElementById("opp-profit").value),
+        time_to_revenue_days: parseInt(document.getElementById("opp-time").value),
+        capital_required: parseFloat(document.getElementById("opp-capex").value),
+        scalability_score: parseInt(document.getElementById("opp-scale").value),
+        sustainability_score: parseInt(document.getElementById("opp-sustain").value),
+        competitive_advantage_score: parseInt(document.getElementById("opp-moat").value),
+        defensibility_score: 7,
+        risk_index: 3,
+        operational_complexity: 2,
+        description: document.getElementById("opp-desc").value
+      };
+
+      try {
+        const res = await fetch("/api/opportunities/evaluate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        showToast(`Opportunity Scored: EV=$${result.expected_value_score}, RAROE=${result.raroe_score}`);
+        document.getElementById("opp-form").reset();
+        await loadOpportunities();
+      } catch (err) {
+        showToast("Error scoring opportunity");
+      }
+    }
+
+    async function provisionFromOpp(title, category, mrr, budget) {
+      const name = title.split("(")[0].trim();
+      try {
+        const res = await fetch("/api/ventures/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            category: category,
+            tagline: `Autonomous ${category} system provisioned from high-EV scoring matrix.`,
+            target_mrr: parseFloat(mrr),
+            initial_budget: parseFloat(budget)
+          })
+        });
+        const v = await res.json();
+        showToast(`Venture ${v.name} initialized with 16 core documents!`);
+        switchTab("tab-ventures");
+      } catch (err) {
+        showToast("Error launching venture");
+      }
+    }
+
+    async function loadVenturesList() {
+      try {
+        const res = await fetch("/api/ventures");
+        const list = await res.json();
+        const sel = document.getElementById("select-venture");
+        sel.innerHTML = "";
+        
+        list.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v.id;
+          opt.innerText = `${v.name} (${v.category})`;
+          sel.appendChild(opt);
+        });
+
+        if (list.length > 0) {
+          currentSelectedVenture = list[0];
+          sel.value = currentSelectedVenture.id;
+          renderDocSidebar();
+          loadVentureDoc(currentSelectedDoc);
+        }
+      } catch (err) {
+        console.error("Venture list error:", err);
+      }
+    }
+
+    function renderDocSidebar() {
+      const container = document.getElementById("doc-nav-list");
+      container.innerHTML = "";
+      MANDATORY_DOCS.forEach(docName => {
+        const item = document.createElement("div");
+        item.className = `doc-list-item ${docName === currentSelectedDoc ? 'active' : ''}`;
+        item.innerText = `📄 ${docName}`;
+        item.onclick = () => {
+          document.querySelectorAll(".doc-list-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+          currentSelectedDoc = docName;
+          loadVentureDoc(docName);
+        };
+        container.appendChild(item);
+      });
+    }
+
+    async function loadVentureDocs() {
+      const sel = document.getElementById("select-venture");
+      const vId = sel.value;
+      const res = await fetch(`/api/ventures/${vId}`);
+      currentSelectedVenture = await res.json();
+      loadVentureDoc(currentSelectedDoc);
+    }
+
+    async function loadVentureDoc(docName) {
+      if (!currentSelectedVenture) return;
+      document.getElementById("doc-active-title").innerText = docName;
+      document.getElementById("doc-venture-badge").innerText = currentSelectedVenture.name;
+
+      try {
+        const res = await fetch(`/api/ventures/${currentSelectedVenture.id}/docs/${docName}`);
+        const data = await res.json();
+        document.getElementById("doc-active-content").innerText = data.content;
+      } catch (err) {
+        document.getElementById("doc-active-content").innerText = "Generating artifact...";
+      }
+    }
+
+    async function promptNewVenture() {
+      const name = prompt("Enter Venture Name (e.g. LeadPulse AI):");
+      if (!name) return;
+      const tagline = prompt("Enter Tagline / Core Value Delivery:", "Autonomous lead enrichment API");
+      
+      try {
+        const res = await fetch("/api/ventures/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            category: "SaaS",
+            tagline: tagline || "Autonomous Value Producer",
+            target_mrr: 20000.0,
+            initial_budget: 1500.0
+          })
+        });
+        const v = await res.json();
+        showToast(`Created venture ${v.name} and all 16 docs!`);
+        await loadVenturesList();
+      } catch (err) {
+        showToast("Failed to create venture");
+      }
+    }
+
+    async function loadKnowledge() {
+      try {
+        const res = await fetch("/api/knowledge");
+        const data = await res.json();
+        const tbody = document.getElementById("knowledge-tbody");
+        tbody.innerHTML = "";
+
+        data.entries.forEach(k => {
+          const tr = document.createElement("tr");
+          const time = k.timestamp ? k.timestamp.split("T")[0] : "";
+          tr.innerHTML = `
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">${time}</td>
+            <td><span class="badge" style="background: rgba(139,92,246,0.15); color: #c084fc; font-weight: 700;">${k.category}</span></td>
+            <td style="font-weight: 700;">${k.title}</td>
+            <td style="color: #cbd5e1; max-width: 450px;">${k.content}</td>
+            <td>${k.tags.map(t => `<span class="badge" style="margin-right:3px;">#${t}</span>`).join('')}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Knowledge load error:", err);
+      }
+    }
+
+    async function promptNewKnowledge() {
+      const title = prompt("Enter Knowledge Title:");
+      if (!title) return;
+      const content = prompt("Enter Key Insight / Lesson Learned / Decision Rationale:");
+      if (!content) return;
+
+      try {
+        await fetch("/api/knowledge/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            category: "LESSON",
+            title: title,
+            content: content,
+            tags: ["compounding", "manual_entry"]
+          })
+        });
+        showToast("Knowledge entry added to permanent ledger.");
+        await loadKnowledge();
+      } catch (err) {
+        showToast("Failed to add knowledge");
+      }
+    }
+
+    async function loadGovernance() {
+      try {
+        const res = await fetch("/api/governance");
+        const data = await res.json();
+        const tbody = document.getElementById("governance-tbody");
+        tbody.innerHTML = "";
+
+        data.all.forEach(g => {
+          const tr = document.createElement("tr");
+          const isPending = g.status === "PENDING";
+          tr.innerHTML = `
+            <td><span class="badge" style="color: var(--accent-gold);">${g.type}</span></td>
+            <td style="font-weight: 700;">${g.title}</td>
+            <td style="color: #cbd5e1; max-width: 350px;">${g.description}</td>
+            <td><span class="badge">${g.risk_level}</span></td>
+            <td><span class="badge ${g.status === 'APPROVED' ? 'style="color:#34d399;"' : ''}">${g.status}</span></td>
+            <td>
+              ${isPending ? `
+                <button class="btn btn-success btn-sm" onclick="resolveGov('${g.id}', true)">Approve</button>
+                <button class="btn btn-danger btn-sm" onclick="resolveGov('${g.id}', false)">Reject</button>
+              ` : `<span style="font-size:0.75rem; color:var(--text-dim);">${g.resolver_notes || 'Resolved'}</span>`}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        document.getElementById("tab-gov-count").innerText = data.pending.length;
+      } catch (err) {
+        console.error("Governance load error:", err);
+      }
+    }
+
+    async function resolveGov(id, approved) {
+      try {
+        await fetch(`/api/governance/${id}/resolve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ approved: approved, notes: approved ? "Approved via Cockpit" : "Rejected via Cockpit" })
+        });
+        showToast(`Item ${approved ? 'APPROVED' : 'REJECTED'}`);
+        await loadGovernance();
+        await fetchStatus();
+      } catch (err) {
+        showToast("Error resolving governance item");
+      }
+    }
+
+    function runSimulation() {
+      const reserves = parseFloat(document.getElementById("slider-reserves").value);
+      const burn = parseFloat(document.getElementById("slider-burn").value);
+      const rev = parseFloat(document.getElementById("slider-rev").value);
+
+      document.getElementById("sim-reserves-val").innerText = `$${reserves.toLocaleString()}`;
+      document.getElementById("sim-burn-val").innerText = `$${burn.toLocaleString()}`;
+      document.getElementById("sim-rev-val").innerText = `$${rev.toLocaleString()}`;
+
+      const netBurn = Math.max(0, burn - rev);
+      let runwayDays = netBurn === 0 ? 9999.0 : (reserves / netBurn) * 30.0;
+      
+      let state = "FORTRESS";
+      let postureDesc = "Focus: Ecosystem dominance, intellectual property moats, platform creation.";
+      
+      if (runwayDays < 30) {
+        state = "CRITICAL";
+        postureDesc = "Focus: Immediate revenue, aggressive cost cuts, customer activation, cash preservation.";
+      } else if (runwayDays < 90) {
+        state = "WARNING";
+        postureDesc = "Focus: Revenue stabilization, retention, process optimization, fast payback acquisition.";
+      } else if (runwayDays < 365) {
+        state = "STABLE";
+        postureDesc = "Focus: Growth, expansion, product improvement, market penetration.";
+      } else if (runwayDays <= 1825) {
+        state = "STRONG";
+        postureDesc = "Focus: Automation, diversification, infrastructure, strategic positioning.";
+      }
+
+      const badge = document.getElementById("sim-badge");
+      badge.className = `state-badge ${state}`;
+      badge.innerText = state;
+      document.getElementById("sim-runway-calc").innerText = `Simulated Runway: ${runwayDays >= 9000 ? 'Infinite (Profitable)' : runwayDays.toFixed(1) + ' Days'} (Net Burn: $${netBurn.toLocaleString()}/mo)`;
+      document.getElementById("sim-posture-directive").innerText = postureDesc;
+    }
+
+    async function commitSimulationToState() {
+      const reserves = parseFloat(document.getElementById("slider-reserves").value);
+      const burn = parseFloat(document.getElementById("slider-burn").value);
+      const rev = parseFloat(document.getElementById("slider-rev").value);
+
+      try {
+        await fetch("/api/treasury/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cash_reserves: reserves,
+            monthly_burn: burn,
+            monthly_revenue: rev
+          })
+        });
+        showToast("Simulated financial state committed to live AEGIS organism.");
+        await fetchStatus();
+      } catch (err) {
+        showToast("Error updating treasury");
+      }
+    }
+
+    // Auto-refresh pollers
+    setInterval(fetchStatus, 5000);
+    setInterval(fetchExecutionLogs, 4000);
+
+    // Initial boot
+    fetchStatus();
+    fetchExecutionLogs();
+  </script>
+</body>
+</html>

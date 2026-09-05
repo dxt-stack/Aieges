@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "name": "AEGIS",
+  "survival_state": "STRONG",
+  "treasury": {
+    "cash_reserves": 50000.0,
+    "monthly_burn": 8000.0,
+    "monthly_revenue": 4500.0,
+    "target_reserves": 250000.0,
+    "updated_at": "2026-09-05T16:20:05.569171"
+  },
+  "loop_active": false,
+  "loop_iteration": 4,
+  "last_loop_timestamp": "2026-09-05T16:24:35.649341+00:00",
+  "active_ventures_count": 2,
+  "total_opportunities_evaluated": 19,
+  "governance_pending_count": 0,
+  "operational_efficiency_index": 94.5,
+  "updated_at": "2026-09-05T16:24:35.651880+00:00"
+}

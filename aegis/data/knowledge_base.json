@@ -1,0 +1,67 @@
+[
+  {
+    "id": "6c5e9fdf",
+    "category": "DECISION",
+    "title": "Greenlit Venture CloudCostSentinel",
+    "content": "Evaluated opportunity with EV score $13510.49 and RAROE 87.8. Generated 16-doc architectural and financial suite.",
+    "venture_id": "bec89e52",
+    "tags": [
+      "venture_launch",
+      "cloudcostsentinel",
+      "ev_prioritization"
+    ],
+    "timestamp": "2026-09-05T16:20:05.573436"
+  },
+  {
+    "id": "8b981fe9",
+    "category": "DECISION",
+    "title": "Adopt Headless Autonomous Micro-SaaS Architecture",
+    "content": "AEGIS will exclusively build and deploy headless API-first software services that require near-zero human labor and support automated billing through Stripe.",
+    "venture_id": null,
+    "tags": [
+      "architecture",
+      "automation",
+      "saas"
+    ],
+    "timestamp": "2026-09-05T16:20:05.569984"
+  },
+  {
+    "id": "472d4667",
+    "category": "ASSUMPTION",
+    "title": "Programmatic Inbound CAC is Sub-$150",
+    "content": "Assuming niche programmatic SEO pages and curated tool listings convert B2B operators at an effective customer acquisition cost under $150.",
+    "venture_id": null,
+    "tags": [
+      "marketing",
+      "cac",
+      "seo"
+    ],
+    "timestamp": "2026-09-05T16:20:05.570003"
+  },
+  {
+    "id": "192a9e44",
+    "category": "EXPERIMENT",
+    "title": "Automated Dunning Sequences on Churn Reduction",
+    "content": "Testing a 3-step automated webhook dunning sequence on payment failures against single retry baseline.",
+    "venture_id": null,
+    "tags": [
+      "retention",
+      "billing",
+      "experiment"
+    ],
+    "timestamp": "2026-09-05T16:20:05.570014"
+  },
+  {
+    "id": "86b22114",
+    "category": "LESSON",
+    "title": "Multi-Cloud API Redundancy is Essential",
+    "content": "Relying on a single AI inference endpoint creates an existential single point of failure. Always maintain instant hot-failover providers.",
+    "venture_id": null,
+    "tags": [
+      "engineering",
+      "resilience",
+      "redundancy"
+    ],
+    "timestamp": "2026-09-05T16:20:05.570025"
+  }
+]
