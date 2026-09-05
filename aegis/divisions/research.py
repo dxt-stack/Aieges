@@ -11,6 +11,7 @@ from typing import Dict, Any, List
 from aegis.core.utils import utc_now_iso
 from aegis.divisions.base_division import BaseDivision
 from aegis.core.models import DivisionEnum, SurvivalStateEnum, Venture, Opportunity, RevenuePriorityEnum
+from aegis.integrations.research_engine import LiveResearchEngine
 
 
 class ResearchDivision(BaseDivision):
@@ -20,9 +21,9 @@ class ResearchDivision(BaseDivision):
     def get_capabilities(self) -> List[str]:
         return [
             "discover_niche_opportunities",
+            "audit_live_competitor_url",
             "analyze_competitor_vulnerabilities",
-            "synthesize_market_tam_sam_som",
-            "evaluate_keyword_intent_clusters"
+            "synthesize_market_tam_sam_som"
         ]
 
     def execute_directive(
@@ -34,7 +35,16 @@ class ResearchDivision(BaseDivision):
     ) -> Dict[str, Any]:
         timestamp = utc_now_iso()
         
-        if task_name == "discover_niche_opportunities":
+        if task_name == "audit_live_competitor_url":
+            url = parameters.get("url", "https://stripe.com")
+            return {
+                "division": self.division_type.value,
+                "task": task_name,
+                "status": "COMPLETED",
+                "timestamp": timestamp,
+                "audit": LiveResearchEngine.audit_url(url)
+            }
+        elif task_name == "discover_niche_opportunities":
             return self._discover_opportunities(survival_state, parameters)
         elif task_name == "analyze_competitor_vulnerabilities":
             return self._analyze_competitors(parameters, venture)
@@ -46,14 +56,13 @@ class ResearchDivision(BaseDivision):
                 "task": task_name,
                 "status": "COMPLETED",
                 "timestamp": timestamp,
-                "output": f"Executed general research scan for {task_name}."
+                "output": f"Executed research directive for {task_name}."
             }
 
     def _discover_opportunities(self, survival_state: SurvivalStateEnum, parameters: Dict[str, Any]) -> Dict[str, Any]:
-        # Generates algorithmic opportunities tailored to survival state
         catalog = [
             {
-                "title": "DocuFlow AI (Autonomous Invoice & Contract Parsing API)",
+                "title": "DocuFlow AI (Autonomous Invoice & Contract Extraction API)",
                 "category": RevenuePriorityEnum.SAAS.value,
                 "target_market": "Mid-Market Logistics & Accounting Firms",
                 "profit_potential_monthly": 18500.0,

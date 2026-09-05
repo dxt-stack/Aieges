@@ -1,5 +1,18 @@
 [
   {
+    "id": "1093bda6",
+    "category": "OUTCOME",
+    "title": "Stripe Payment Received: +$299.00",
+    "content": "Processed successful billing event evt_sim_1788627462. Cash reserves increased to $50,299.00.",
+    "venture_id": null,
+    "tags": [
+      "stripe",
+      "revenue",
+      "cashflow"
+    ],
+    "timestamp": "2026-09-05T16:57:42.506448+00:00"
+  },
+  {
     "id": "6c5e9fdf",
     "category": "DECISION",
     "title": "Greenlit Venture CloudCostSentinel",

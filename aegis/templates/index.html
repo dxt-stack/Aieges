@@ -6,21 +6,27 @@
   <title>AEGIS — Autonomous Economic Growth & Intelligent Survival System</title>
   <style>
     :root {
-      --bg-dark: #07090e;
-      --bg-card: #0e1420;
-      --bg-card-hover: #141c2c;
-      --bg-surface: #172033;
-      --border-color: #1e293b;
-      --border-highlight: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent-cyan: #06b6d4;
-      --accent-emerald: #10b981;
-      --accent-gold: #f59e0b;
-      --accent-crimson: #ef4444;
-      --accent-purple: #8b5cf6;
-      --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+      --bg-pure: #000000;
+      --bg-dark: #080808;
+      --bg-card: #101010;
+      --bg-card-hover: #161616;
+      --bg-surface: #1c1c1c;
+      --border-subtle: #242424;
+      --border-strong: #383838;
+      
+      --text-white: #ffffff;
+      --text-light: #ececec;
+      --text-muted: #999999;
+      --text-dim: #666666;
+
+      /* NAB / Warm Beige-Yellow Accents */
+      --nab-beige: #f4ecd8;
+      --nab-gold: #d4af37;
+      --nab-yellow: #e5c98a;
+      --nab-subtle: rgba(229, 201, 138, 0.12);
+      --nab-border: rgba(212, 175, 55, 0.35);
+
+      --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
       --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -31,21 +37,21 @@
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
+      background-color: var(--bg-pure);
+      color: var(--text-light);
       font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      line-height: 1.5;
     }
 
     /* HEADER / HUD */
     header {
-      background: rgba(14, 20, 32, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.85rem 1.75rem;
+      background: #080808;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.9rem 2rem;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -61,88 +67,80 @@
     }
 
     .brand-logo {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, #06b6d4, #3b82f6);
-      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
       font-size: 1.1rem;
-      color: #fff;
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+      font-family: var(--font-mono);
+      letter-spacing: -0.05em;
     }
 
     .brand-text h1 {
       font-size: 1.15rem;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
     .brand-text p {
-      font-size: 0.72rem;
-      color: var(--text-muted);
+      font-size: 0.7rem;
+      color: var(--nab-yellow);
       font-family: var(--font-mono);
-      letter-spacing: 0.02em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     .hud-telemetry {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1.75rem;
     }
 
     .state-badge {
-      padding: 0.4rem 0.9rem;
-      border-radius: 6px;
+      padding: 0.35rem 0.85rem;
+      border-radius: 4px;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      border: 1px solid transparent;
-      transition: all 0.3s ease;
+      gap: 0.45rem;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--text-white);
     }
 
     .state-badge.CRITICAL {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border-color: rgba(239, 68, 68, 0.4);
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
-      animation: pulse-critical 2s infinite;
+      border-color: #ffffff;
+      background: #ffffff;
+      color: #000000;
+      animation: pulse-critical 1.5s infinite;
     }
     .state-badge.WARNING {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border-color: rgba(245, 158, 11, 0.4);
+      border-color: var(--nab-gold);
+      color: var(--nab-yellow);
+      background: var(--nab-subtle);
     }
-    .state-badge.STABLE {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border-color: rgba(16, 185, 129, 0.4);
-    }
-    .state-badge.STRONG {
-      background: rgba(6, 182, 212, 0.15);
-      color: #38bdf8;
-      border-color: rgba(6, 182, 212, 0.4);
-    }
-    .state-badge.FORTRESS {
-      background: rgba(234, 179, 8, 0.15);
-      color: #fde047;
-      border-color: rgba(234, 179, 8, 0.4);
-      box-shadow: 0 0 12px rgba(234, 179, 8, 0.2);
+    .state-badge.STABLE, .state-badge.STRONG, .state-badge.FORTRESS {
+      border-color: var(--nab-border);
+      color: var(--nab-beige);
+      background: var(--nab-subtle);
     }
 
     @keyframes pulse-critical {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+      50% { opacity: 0.4; }
     }
 
     .telemetry-item {
@@ -151,31 +149,32 @@
       text-align: right;
     }
     .telemetry-item .label {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: var(--text-dim);
       font-family: var(--font-mono);
       text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .telemetry-item .val {
       font-size: 0.95rem;
       font-weight: 700;
       font-family: var(--font-mono);
-      color: var(--text-main);
+      color: var(--nab-beige);
     }
 
-    /* NAV TABS */
+    /* NAVIGATION */
     .nav-bar {
-      background: #090e17;
-      border-bottom: 1px solid var(--border-color);
+      background: #0a0a0a;
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
-      padding: 0 1.75rem;
-      gap: 0.5rem;
+      padding: 0 2rem;
+      gap: 0.25rem;
       overflow-x: auto;
     }
 
     .nav-tab {
-      padding: 0.8rem 1.1rem;
-      font-size: 0.82rem;
+      padding: 0.85rem 1.15rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
       border: none;
@@ -187,21 +186,22 @@
       gap: 0.5rem;
       transition: all 0.2s ease;
       white-space: nowrap;
+      letter-spacing: 0.02em;
     }
     .nav-tab:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-white);
+      background: rgba(255, 255, 255, 0.03);
     }
     .nav-tab.active {
-      color: var(--accent-cyan);
-      border-bottom-color: var(--accent-cyan);
-      background: rgba(6, 182, 212, 0.05);
+      color: var(--nab-beige);
+      border-bottom-color: var(--nab-gold);
+      background: rgba(229, 201, 138, 0.05);
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN CONTENT */
     main {
       flex: 1;
-      padding: 1.75rem;
+      padding: 2rem;
       max-width: 1480px;
       margin: 0 auto;
       width: 100%;
@@ -212,7 +212,7 @@
     }
     .tab-content.active {
       display: block;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     @keyframes fadeIn {
@@ -223,7 +223,7 @@
     /* GRID & CARDS */
     .grid-4 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -231,52 +231,68 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
+      gap: 1.5rem;
       margin-bottom: 1.5rem;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .grid-2 { grid-template-columns: 1fr; }
     }
 
     .card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1.25rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 1.4rem;
       position: relative;
     }
 
+    .card:hover {
+      border-color: var(--border-strong);
+    }
+
     .card-title {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--text-white);
       margin-bottom: 0.85rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
     }
 
-    .card-title .badge {
-      font-size: 0.7rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+    .badge {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
       background: var(--bg-surface);
-      color: var(--text-muted);
+      color: var(--nab-beige);
       font-family: var(--font-mono);
+      border: 1px solid var(--border-subtle);
+      text-transform: uppercase;
+    }
+
+    .badge-gold {
+      background: var(--nab-subtle);
+      color: var(--nab-yellow);
+      border-color: var(--nab-border);
+      font-weight: 700;
     }
 
     .stat-number {
-      font-size: 1.65rem;
+      font-size: 1.8rem;
       font-weight: 800;
       font-family: var(--font-mono);
-      color: var(--text-main);
+      color: var(--text-white);
       margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
     }
 
     .stat-subtext {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
     }
 
@@ -286,121 +302,122 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.55rem 1.1rem;
-      border-radius: 6px;
-      font-size: 0.82rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
       font-weight: 600;
-      font-family: var(--font-sans);
+      font-family: var(--font-mono);
       cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
-    .btn-primary {
-      background: #0284c7;
-      color: #fff;
+    .btn-gold {
+      background: var(--nab-beige);
+      color: #000000;
+      border-color: var(--nab-gold);
     }
-    .btn-primary:hover {
-      background: #0369a1;
-      box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+    .btn-gold:hover {
+      background: #ffffff;
+      box-shadow: 0 0 12px rgba(244, 236, 216, 0.4);
     }
-    .btn-success {
-      background: #059669;
-      color: #fff;
+    .btn-white {
+      background: #ffffff;
+      color: #000000;
     }
-    .btn-success:hover {
-      background: #047857;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    .btn-white:hover {
+      background: #e0e0e0;
     }
-    .btn-danger {
-      background: #dc2626;
-      color: #fff;
+    .btn-dark {
+      background: var(--bg-surface);
+      border-color: var(--border-strong);
+      color: var(--text-white);
     }
-    .btn-danger:hover {
-      background: #b91c1c;
+    .btn-dark:hover {
+      background: #282828;
+      border-color: #555555;
     }
     .btn-outline {
       background: transparent;
-      border-color: var(--border-color);
-      color: var(--text-main);
+      border-color: var(--border-strong);
+      color: var(--text-light);
     }
     .btn-outline:hover {
       background: var(--bg-surface);
-      border-color: var(--border-highlight);
+      border-color: var(--nab-border);
+      color: var(--nab-beige);
     }
     .btn-sm {
-      padding: 0.35rem 0.65rem;
-      font-size: 0.74rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.72rem;
     }
 
-    /* LIVE CONSOLE / LOGS */
+    /* TERMINAL LOGS */
     .terminal-window {
-      background: #05070a;
-      border: 1px solid #1a2233;
-      border-radius: 8px;
+      background: #050505;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
       padding: 1rem;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: #38bdf8;
-      height: 320px;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      height: 340px;
       overflow-y: auto;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     .log-line {
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
       display: flex;
       gap: 0.75rem;
       align-items: baseline;
     }
     .log-time {
       color: var(--text-dim);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       min-width: 75px;
     }
     .log-stage {
-      padding: 0.1rem 0.4rem;
-      border-radius: 3px;
+      padding: 0.1rem 0.45rem;
+      border-radius: 2px;
       font-weight: 700;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
+      background: var(--bg-surface);
+      color: var(--nab-yellow);
+      border: 1px solid var(--border-subtle);
     }
-    .stage-INIT { background: #1e293b; color: #94a3b8; }
-    .stage-OBSERVE { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
-    .stage-ANALYZE { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
-    .stage-DISCOVER { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .stage-PRIORITIZE { background: rgba(234, 179, 8, 0.2); color: #fde047; }
-    .stage-PLAN { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-    .stage-BUILD_DEPLOY { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-    .stage-MEASURE { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
     .log-msg {
-      color: #e2e8f0;
+      color: var(--text-light);
       flex: 1;
     }
 
     /* TABLES */
     .table-container {
       overflow-x: auto;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
     }
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
     }
     th {
-      background: #090e17;
+      background: #080808;
       color: var(--text-muted);
       padding: 0.75rem 1rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border-color);
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border-subtle);
     }
     td {
       padding: 0.85rem 1rem;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-main);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-light);
     }
     tr:hover {
       background: rgba(255, 255, 255, 0.02);
@@ -412,160 +429,150 @@
     }
     .form-group label {
       display: block;
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-family: var(--font-mono);
       color: var(--text-muted);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .form-control {
       width: 100%;
       padding: 0.6rem 0.85rem;
-      background: #080c14;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-main);
+      background: #050505;
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      color: var(--text-white);
       font-family: var(--font-sans);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
     .form-control:focus {
       outline: none;
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+      border-color: var(--nab-yellow);
+      box-shadow: 0 0 0 1px var(--nab-gold);
     }
 
-    /* DOC VIEWER */
+    /* DUAL CODE & DOC VIEWER */
     .doc-viewer-layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 300px 1fr;
       gap: 1.25rem;
       min-height: 600px;
     }
     .doc-sidebar {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
       padding: 1rem;
       overflow-y: auto;
-      max-height: 700px;
+      max-height: 720px;
     }
     .doc-list-item {
-      padding: 0.55rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.78rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
       font-family: var(--font-mono);
       color: var(--text-muted);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.25rem;
-      transition: all 0.15s ease;
+      margin-bottom: 0.2rem;
+      transition: all 0.1s ease;
     }
     .doc-list-item:hover {
       background: var(--bg-surface);
-      color: var(--text-main);
+      color: var(--text-white);
     }
     .doc-list-item.active {
-      background: rgba(6, 182, 212, 0.15);
-      color: var(--accent-cyan);
+      background: var(--nab-subtle);
+      color: var(--nab-beige);
+      border-left: 2px solid var(--nab-gold);
       font-weight: 700;
     }
     .doc-content-pane {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.75rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 1.5rem;
       overflow-y: auto;
-      max-height: 700px;
+      max-height: 720px;
     }
     .doc-content-pane pre {
-      background: #05070a;
-      padding: 1rem;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
+      background: #050505;
+      padding: 1.2rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       white-space: pre-wrap;
-      color: #e2e8f0;
+      color: var(--text-light);
       line-height: 1.6;
     }
 
-    /* DIVISION WORKBENCH TABS */
-    .division-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.25rem;
-    }
-    .division-card {
+    /* INSTRUCTIONS ACCORDION */
+    .guide-step {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
       padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      margin-bottom: 1rem;
     }
-    .division-card:hover {
-      border-color: var(--border-highlight);
-    }
-    .division-header {
+    .guide-step-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--nab-beige);
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.6rem;
+      font-family: var(--font-mono);
     }
-    .division-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      display: flex;
+    .guide-step-num {
+      width: 24px;
+      height: 24px;
+      background: var(--nab-beige);
+      color: #000;
+      border-radius: 50%;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.75rem;
+      font-weight: 900;
     }
-    .div-res { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-    .div-prd { background: rgba(139, 92, 246, 0.15); color: #c084fc; }
-    .div-eng { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-    .div-mkt { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
-    .div-ops { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-    .div-fin { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
 
-    /* TOAST ALERTS */
+    /* TOAST */
     #toast-container {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
+      bottom: 2rem;
+      right: 2rem;
       z-index: 1000;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
     .toast {
-      padding: 0.85rem 1.25rem;
-      background: var(--bg-card);
-      border: 1px solid var(--accent-cyan);
-      border-radius: 6px;
-      color: var(--text-main);
-      font-size: 0.82rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      padding: 0.85rem 1.3rem;
+      background: #111111;
+      border: 1px solid var(--nab-gold);
+      border-radius: 4px;
+      color: var(--nab-beige);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
       animation: slideIn 0.2s ease-out;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP HUD -->
+  <!-- HEADER / HUD -->
   <header>
     <div class="brand-group">
-      <div class="brand-logo">🛡️</div>
+      <div class="brand-logo">A</div>
       <div class="brand-text">
-        <h1>AEGIS <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 600;">v1.0</span></h1>
-        <p>AUTONOMOUS ECONOMIC GROWTH & INTELLIGENT SURVIVAL SYSTEM</p>
+        <h1>AEGIS <span style="font-size: 0.7rem; color: var(--nab-yellow); font-weight: 600;">v1.0</span></h1>
+        <p>AUTONOMOUS ECONOMIC GROWTH & INTELLIGENT SURVIVAL</p>
       </div>
     </div>
 
@@ -582,44 +589,119 @@
 
       <div class="telemetry-item">
         <span class="label">MRR (Oxygen)</span>
-        <span class="val" id="hud-revenue" style="color: var(--accent-emerald);">$4,500</span>
+        <span class="val" id="hud-revenue">$4,500</span>
       </div>
 
       <div class="telemetry-item">
-        <span class="label">Runway</span>
-        <span class="val" id="hud-runway" style="color: var(--accent-cyan);">300.0 Days</span>
+        <span class="label">Net Runway</span>
+        <span class="val" id="hud-runway">428.6 Days</span>
       </div>
 
-      <button class="btn btn-primary btn-sm" onclick="triggerLoopCycle()" id="btn-run-loop">
-        ⚡ Run Value Loop
-      </button>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-gold btn-sm" onclick="triggerLoopCycle()" id="btn-run-loop">⚡ Run Loop</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleDaemon()" id="btn-toggle-daemon">▶ Start Daemon</button>
+      </div>
     </div>
   </header>
 
-  <!-- NAVIGATION TABS -->
+  <!-- NAVIGATION -->
   <nav class="nav-bar">
-    <button class="nav-tab active" onclick="switchTab('tab-dashboard')">📊 Cockpit & Telemetry</button>
-    <button class="nav-tab" onclick="switchTab('tab-divisions')">🏢 Autonomous Divisions</button>
-    <button class="nav-tab" onclick="switchTab('tab-opportunities')">🎯 Opportunity Matrix & EV Scorer</button>
-    <button class="nav-tab" onclick="switchTab('tab-ventures')">📁 Portfolio & 16-Doc Suite</button>
+    <button class="nav-tab active" onclick="switchTab('tab-instructions')">📖 System Instructions & Activation</button>
+    <button class="nav-tab" onclick="switchTab('tab-dashboard')">📊 Cockpit & Telemetry</button>
+    <button class="nav-tab" onclick="switchTab('tab-divisions')">🏢 6 Autonomous Divisions</button>
+    <button class="nav-tab" onclick="switchTab('tab-opportunities')">🎯 Opportunity Scorer & Radar</button>
+    <button class="nav-tab" onclick="switchTab('tab-ventures')">📁 Ventures & Code Bundles</button>
+    <button class="nav-tab" onclick="switchTab('tab-stripe')">💳 Live Stripe & Revenue Bridge</button>
     <button class="nav-tab" onclick="switchTab('tab-knowledge')">🧠 Compounding Knowledge</button>
     <button class="nav-tab" onclick="switchTab('tab-governance')">🏛️ Human Governance (<span id="tab-gov-count">0</span>)</button>
-    <button class="nav-tab" onclick="switchTab('tab-simulator')">🧪 Treasury Stress Simulator</button>
+    <button class="nav-tab" onclick="switchTab('tab-simulator')">🧪 Treasury Stress Lab</button>
     <button class="nav-tab" onclick="switchTab('tab-charter')">📜 System Charter</button>
   </nav>
 
-  <!-- MAIN VIEWPORT -->
+  <!-- MAIN -->
   <main>
 
+    <!-- TAB 0: SYSTEM INSTRUCTIONS & HOW TO ACTIVATE -->
+    <div id="tab-instructions" class="tab-content active">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-white);">How to Activate, Configure, and Operate AEGIS</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">AEGIS is not a passive conversational bot. It is a self-directed economic organism designed to autonomously build, manage, and scale real legal value-producing software systems.</p>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-num">1</span>
+          <span>Activate the Autonomous Background Daemon</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem;">
+          The daemon runs an asynchronous continuous loop in the background. On every cycle, it observes liquid cash reserves, calculates net runway, evaluates new market opportunities, runs security audits, and writes to the permanent compounding knowledge ledger.
+        </p>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <button class="btn btn-gold btn-sm" onclick="startDaemon()">Start Background Daemon</button>
+          <button class="btn btn-outline btn-sm" onclick="stopDaemon()">Halt Daemon</button>
+          <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--nab-yellow);" id="guide-daemon-status">Status: Standby</span>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-num">2</span>
+          <span>Perform Real Competitor URL & Market Intelligence Audits</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem;">
+          The <strong>Research Division</strong> does not rely on hypothetical data. You can point it at any live website or competitor domain (e.g. <code>https://stripe.com</code> or <code>https://github.com</code>). It fetches the live HTML, parses meta tags, headings, pricing clues, and identifies strategic exploitation vectors.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="switchTab('tab-divisions')">Go to Research Division & Run Live URL Audit &rarr;</button>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-num">3</span>
+          <span>Connect Real Stripe Billing & Ingest Webhooks</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem;">
+          AEGIS connects directly to Stripe webhooks. When customers pay subscriptions, cash reserves and MRR automatically increase. If subscriptions churn, MRR decreases and Operations Division triggers automated retention SOPs. If abnormal refunds occur, human governors are notified.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="switchTab('tab-stripe')">Go to Stripe Revenue Bridge & Webhook Simulator &rarr;</button>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-num">4</span>
+          <span>Generate Real Production-Ready Micro-SaaS Python Code & 16-Doc Suites</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem;">
+          When an opportunity passes the <strong>Decision Filter</strong>, AEGIS generates:
+          <ul style="margin-left: 1.5rem; margin-top: 0.4rem; font-size: 0.8rem; color: var(--nab-beige);">
+            <li><strong>Complete Runnable FastAPI Backend:</strong> <code>app.py</code> with auth, API quotas, telemetry, and background queues.</li>
+            <li><strong>Container & Testing:</strong> <code>Dockerfile</code>, <code>requirements.txt</code>, and automated <code>test_app.py</code> test suites.</li>
+            <li><strong>The 16 Canonical Markdown Documents:</strong> Architecture, financial forecasts, SOPs, and GTM plans.</li>
+          </ul>
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="switchTab('tab-ventures')">Inspect Venture Code & Documentation &rarr;</button>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-num">5</span>
+          <span>Human Governance Escalation Policy</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem;">
+          Humans are owners and governors, never operators. When an action requires legal signatures, banking sweeps, or KYC compliance, AEGIS queues the item for approval. Everything else runs 100% autonomously.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="switchTab('tab-governance')">View Governance Queue &rarr;</button>
+      </div>
+    </div>
+
     <!-- TAB 1: COCKPIT & TELEMETRY -->
-    <div id="tab-dashboard" class="tab-content active">
+    <div id="tab-dashboard" class="tab-content">
       <div class="grid-4">
         <div class="card">
           <div class="card-title">
             <span>SURVIVAL POSTURE</span>
-            <span class="badge">STATE</span>
+            <span class="badge badge-gold">STATE</span>
           </div>
-          <div class="stat-number" id="card-state-text" style="color: var(--accent-emerald);">STABLE</div>
+          <div class="stat-number" id="card-state-text">STABLE</div>
           <div class="stat-subtext" id="card-state-desc">Runway: 3–12 months. Growth & market penetration posture.</div>
         </div>
 
@@ -634,7 +716,7 @@
 
         <div class="card">
           <div class="card-title">
-            <span>MONTHLY BURN & MRR</span>
+            <span>BURN / REVENUE</span>
             <span class="badge">FINANCE</span>
           </div>
           <div class="stat-number" id="card-burn-rev">$8k / $4.5k</div>
@@ -643,51 +725,49 @@
 
         <div class="card">
           <div class="card-title">
-            <span>EFFICIENCY INDEX</span>
+            <span>LEVERAGE INDEX</span>
             <span class="badge">OPS</span>
           </div>
-          <div class="stat-number" id="card-efficiency" style="color: var(--accent-cyan);">94.5%</div>
-          <div class="stat-subtext">Automated Autonomous Leverage</div>
+          <div class="stat-number" id="card-efficiency" style="color: var(--nab-yellow);">94.5%</div>
+          <div class="stat-subtext">Automated Autonomous Output</div>
         </div>
       </div>
 
       <div class="grid-2">
-        <!-- LIVE LOOP TERMINAL -->
         <div class="card">
           <div class="card-title">
-            <span>AUTONOMOUS VALUE CREATION LOOP TELEMETRY</span>
-            <button class="btn btn-outline btn-sm" onclick="fetchExecutionLogs()">🔄 Refresh</button>
+            <span>AUTONOMOUS TELEMETRY STREAM</span>
+            <button class="btn btn-outline btn-sm" onclick="fetchExecutionLogs()">Refresh</button>
           </div>
           <div class="terminal-window" id="terminal-logs">
             <!-- Logs injected dynamically -->
           </div>
         </div>
 
-        <!-- QUICK ACTION & SYSTEM STATUS -->
         <div class="card">
           <div class="card-title">
-            <span>ACTIVE OPERATIONS & GOVERNANCE</span>
+            <span>ORGANISM CONTROLLER</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-            <div style="background: var(--bg-surface); padding: 0.85rem; border-radius: 6px;">
-              <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.3rem;">CORE DIRECTIVE EXECUTION</div>
-              <p style="font-size: 0.84rem; color: #cbd5e1;">Money is survival. Revenue is oxygen. Cash reserves are life support. All actions optimized for legal compounding value.</p>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: var(--bg-surface); padding: 1rem; border-radius: 4px; border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--nab-yellow); margin-bottom: 0.3rem;">CORE EXISTENCE DIRECTIVE</div>
+              <p style="font-size: 0.82rem; color: var(--text-light);">Money is survival. Revenue is oxygen. Cash reserves are life support. All actions optimized for legal compounding value.</p>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-              <div style="background: #080c14; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 6px;">
-                <div style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">ACTIVE VENTURES</div>
-                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);" id="quick-active-ventures">1</div>
+              <div style="background: #050505; border: 1px solid var(--border-subtle); padding: 0.85rem; border-radius: 4px;">
+                <div style="font-size: 0.68rem; color: var(--text-dim); font-family: var(--font-mono);">ACTIVE VENTURES</div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);" id="quick-active-ventures">2</div>
               </div>
-              <div style="background: #080c14; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 6px;">
-                <div style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">EVALUATED OPPS</div>
-                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);" id="quick-total-opps">3</div>
+              <div style="background: #050505; border: 1px solid var(--border-subtle); padding: 0.85rem; border-radius: 4px;">
+                <div style="font-size: 0.68rem; color: var(--text-dim); font-family: var(--font-mono);">EVALUATED RADAR</div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);" id="quick-total-opps">11</div>
               </div>
             </div>
 
             <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-              <button class="btn btn-success" style="flex: 1;" onclick="triggerLoopCycle()">⚡ Run Full Value Cycle</button>
-              <button class="btn btn-outline" style="flex: 1;" onclick="switchTab('tab-opportunities')">🔍 Discover Opportunities</button>
+              <button class="btn btn-gold" style="flex: 1;" onclick="triggerLoopCycle()">⚡ Run Value Cycle</button>
+              <button class="btn btn-outline" style="flex: 1;" onclick="switchTab('tab-opportunities')">🔍 Opportunity Radar</button>
             </div>
           </div>
         </div>
@@ -696,120 +776,95 @@
 
     <!-- TAB 2: AUTONOMOUS DIVISIONS -->
     <div id="tab-divisions" class="tab-content">
-      <div style="margin-bottom: 1.25rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 800;">The 6 Autonomous Organizational Divisions</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Specialized autonomous workers executing specialized domain directives without manual operator overhead.</p>
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">The 6 Autonomous Organizational Divisions</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Autonomous functional workers executing real market intelligence, engineering, and finance tasks.</p>
       </div>
 
-      <div class="division-grid">
-        <!-- RESEARCH -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-res">🔬</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Research Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-RESEARCH</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Market research, competitor vulnerability scans, TAM/SAM/SOM modeling, trend discovery.</p>
+      <!-- LIVE COMPETITOR AUDIT TOOL -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>RESEARCH DIVISION — LIVE COMPETITOR URL AUDIT</span>
+          <span class="badge badge-gold">LIVE SCRAPER</span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 0.5rem;">
+          <input type="text" class="form-control" id="input-audit-url" placeholder="Enter live competitor URL (e.g. https://stripe.com or https://linear.app)" value="https://stripe.com">
+          <button class="btn btn-gold" onclick="runLiveUrlAudit()">Audit Target URL</button>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); font-family: var(--font-mono);">Performs real HTTP fetch, extracts meta description, H1/H2 tags, pricing points, and generates vulnerability report.</div>
+      </div>
+
+      <div class="grid-4" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="card">
+          <div class="card-title">
+            <span>RESEARCH DIVISION</span>
+            <span class="badge">RES</span>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('RESEARCH', 'discover_niche_opportunities')">Execute Opportunity Scan</button>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">TAM/SAM/SOM synthesis, competitor vulnerability discovery, search intent cluster scan.</p>
+          <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('RESEARCH', 'discover_niche_opportunities')">Run Opportunity Discovery</button>
         </div>
 
-        <!-- PRODUCT -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-prd">📐</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Product Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-PRODUCT</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">MVP scoping, pricing tier calibration, value validation, feature roadmapping.</p>
+        <div class="card">
+          <div class="card-title">
+            <span>PRODUCT DIVISION</span>
+            <span class="badge">PRD</span>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">MVP scoping, pricing tier calibration, value validation matrices, lean roadmaps.</p>
           <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('PRODUCT', 'generate_mvp_specification')">Generate MVP Spec</button>
         </div>
 
-        <!-- ENGINEERING -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-eng">⚙️</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Engineering Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-ENGINEERING</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">System architecture, infrastructure auto-scaling, security audits, worker throughput.</p>
+        <div class="card">
+          <div class="card-title">
+            <span>ENGINEERING DIVISION</span>
+            <span class="badge">ENG</span>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">System architecture, infrastructure auto-scaling, security audits, worker queues.</p>
           <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('ENGINEERING', 'audit_system_resilience_and_security')">Audit Security & Moats</button>
         </div>
 
-        <!-- MARKETING -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-mkt">📣</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Marketing Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-MARKETING</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Programmatic SEO clusters, automated cold B2B sequences, conversion copywriting.</p>
+        <div class="card">
+          <div class="card-title">
+            <span>MARKETING DIVISION</span>
+            <span class="badge">MKT</span>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Programmatic SEO matrices (250+ pages), automated cold B2B outbound sequences.</p>
           <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('MARKETING', 'draft_b2b_outbound_sequence')">Draft B2B Outbound</button>
         </div>
 
-        <!-- OPERATIONS -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-ops">🔄</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Operations Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-OPERATIONS</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">SOP catalog generation, churn prevention triggers, queue backpressure relief.</p>
+        <div class="card">
+          <div class="card-title">
+            <span>OPERATIONS DIVISION</span>
+            <span class="badge">OPS</span>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">SOP catalog compilation, churn prevention triggers, queue backpressure relief.</p>
           <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('OPERATIONS', 'generate_sop_catalog')">Compile SOP Catalog</button>
         </div>
 
-        <!-- FINANCE -->
-        <div class="division-card">
-          <div>
-            <div class="division-header">
-              <div class="division-icon div-fin">📈</div>
-              <div>
-                <h3 style="font-size: 0.95rem;">Finance Division</h3>
-                <span style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">AEGIS-FINANCE</span>
-              </div>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Treasury stress tests, LTV/CAC payback calculations, burn rate containment.</p>
+        <div class="card">
+          <div class="card-title">
+            <span>FINANCE DIVISION</span>
+            <span class="badge">FIN</span>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Treasury stress tests, LTV/CAC payback calculations, burn rate containment.</p>
           <button class="btn btn-outline btn-sm" onclick="runDivisionDirective('FINANCE', 'run_treasury_stress_test')">Run Treasury Stress Test</button>
         </div>
       </div>
 
-      <!-- DIVISION OUTPUT CONSOLE -->
+      <!-- DIVISION TELEMETRY INSPECTOR -->
       <div class="card" style="margin-top: 1.5rem;">
         <div class="card-title">
-          <span>DIVISION EXECUTION INSPECTOR</span>
-          <span class="badge" id="division-active-badge">STANDBY</span>
+          <span>DIVISION OUTPUT INSPECTOR</span>
+          <span class="badge badge-gold" id="division-active-badge">STANDBY</span>
         </div>
-        <pre id="division-output" style="background: #05070a; padding: 1rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; color: #a5f3fc; max-height: 300px; overflow-y: auto;">Click any division directive above to execute and view structured telemetry.</pre>
+        <pre id="division-output" style="background: #050505; padding: 1.2rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--nab-beige); max-height: 340px; overflow-y: auto;">Click any division directive or audit a live URL to inspect structured JSON output.</pre>
       </div>
     </div>
 
-    <!-- TAB 3: OPPORTUNITY MATRIX & EV SCORER -->
+    <!-- TAB 3: OPPORTUNITY SCORER -->
     <div id="tab-opportunities" class="tab-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <div>
-          <h2 style="font-size: 1.25rem; font-weight: 800;">Opportunity Matrix & Algorithmic Scoring Engine</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Evaluated via Multi-Factor Expected Value (EV) and Risk-Adjusted Return on Effort (RAROE).</p>
-        </div>
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Opportunity Matrix & Algorithmic EV Scorer</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Scores opportunities mathematically against revenue hierarchy and current survival posture.</p>
       </div>
 
       <div class="table-container" style="margin-bottom: 1.5rem;">
@@ -827,19 +882,18 @@
             </tr>
           </thead>
           <tbody id="opportunities-tbody">
-            <!-- Rendered dynamically -->
+            <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
 
-      <!-- EVALUATE CUSTOM OPPORTUNITY FORM -->
       <div class="card">
         <div class="card-title">
           <span>EVALUATE NEW ASYMMETRIC OPPORTUNITY</span>
-          <span class="badge">ALGORITHMIC SCORER</span>
+          <span class="badge badge-gold">MATHEMATICAL FILTER</span>
         </div>
         <form id="opp-form" onsubmit="handleCustomOpportunity(event)">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
             <div class="form-group">
               <label>Opportunity Title</label>
               <input type="text" class="form-control" id="opp-title" required placeholder="e.g. Stripe Dunning Auto-Pilot API">
@@ -888,77 +942,129 @@
             <label>Description & Value Delivery Mechanism</label>
             <input type="text" class="form-control" id="opp-desc" required placeholder="Autonomous webhook service intercepting churn and recovering failed charges.">
           </div>
-          <button type="submit" class="btn btn-primary">Score & Insert into Radar</button>
+          <button type="submit" class="btn btn-gold">Score & Add to Radar</button>
         </form>
       </div>
     </div>
 
-    <!-- TAB 4: VENTURES & 16-DOC SUITE -->
+    <!-- TAB 4: VENTURES & CODE VIEWER -->
     <div id="tab-ventures" class="tab-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <div>
-          <h2 style="font-size: 1.25rem; font-weight: 800;">Venture Portfolio & Mandatory 16-Artifact Suite</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Policy: 'Nothing exists unless documented.' Every venture maintains 16 canonical architectural and operational files.</p>
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Ventures Portfolio, Code Bundles & 16-Doc Suites</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Every venture includes the runnable Python microservice (<code>app.py</code>, <code>Dockerfile</code>, <code>test_app.py</code>) + all 16 canonical docs.</p>
         </div>
         <div style="display: flex; gap: 0.5rem;">
           <select class="form-control" id="select-venture" onchange="loadVentureDocs()" style="width: 260px;">
-            <!-- Injected dynamically -->
+            <!-- Populated dynamically -->
           </select>
-          <button class="btn btn-outline btn-sm" onclick="promptNewVenture()">+ New Venture</button>
+          <button class="btn btn-gold btn-sm" onclick="promptNewVenture()">+ Provision Venture</button>
         </div>
       </div>
 
       <div class="doc-viewer-layout">
         <div class="doc-sidebar">
-          <div style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.5rem; text-transform: uppercase;">MANDATORY 16 ARTIFACTS</div>
+          <div style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--nab-yellow); margin-bottom: 0.4rem; text-transform: uppercase;">SOFTWARE & CODE BUNDLE</div>
+          <div id="code-nav-list" style="margin-bottom: 1rem;">
+            <!-- Code files -->
+          </div>
+
+          <div style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 0.4rem; text-transform: uppercase;">16 CANONICAL DOCUMENTS</div>
           <div id="doc-nav-list">
-            <!-- 16 docs list -->
+            <!-- 16 docs -->
           </div>
         </div>
 
         <div class="doc-content-pane">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-            <h3 id="doc-active-title" style="font-size: 1rem; font-family: var(--font-mono); color: var(--accent-cyan);">PROJECT_OVERVIEW.md</h3>
-            <span class="badge" id="doc-venture-badge">DocuFlow AI</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+            <h3 id="doc-active-title" style="font-size: 0.95rem; font-family: var(--font-mono); color: var(--nab-beige);">app.py</h3>
+            <span class="badge badge-gold" id="doc-venture-badge">DocuFlow AI</span>
           </div>
-          <pre id="doc-active-content">Select an artifact on the left to inspect.</pre>
+          <pre id="doc-active-content">Select an artifact or code file on the left.</pre>
         </div>
       </div>
     </div>
 
-    <!-- TAB 5: KNOWLEDGE COMPOUNDING LEDGER -->
-    <div id="tab-knowledge" class="tab-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <div>
-          <h2 style="font-size: 1.25rem; font-weight: 800;">Knowledge Compounding Ledger</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Record: Decisions, Assumptions, Experiments, Outcomes, Failures, Lessons. Undocumented knowledge is lost capital.</p>
+    <!-- TAB 5: STRIPE REVENUE BRIDGE -->
+    <div id="tab-stripe" class="tab-content">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Stripe Revenue Bridge & Webhook Simulator</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Real incoming payments automatically increase cash reserves and MRR. Churn automatically decrements MRR.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <span>WEBHOOK EVENT SIMULATOR</span>
+            <span class="badge badge-gold">TEST BRIDGE</span>
+          </div>
+          <div class="form-group">
+            <label>Event Type</label>
+            <select class="form-control" id="stripe-sim-type">
+              <option value="invoice.payment_succeeded">invoice.payment_succeeded (+Cash & MRR)</option>
+              <option value="customer.subscription.deleted">customer.subscription.deleted (-MRR & Churn SOP)</option>
+              <option value="charge.refunded">charge.refunded (-Cash & Governance Alert)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" class="form-control" id="stripe-sim-amount" value="149.00">
+          </div>
+          <div class="form-group">
+            <label>Customer Identifier</label>
+            <input type="text" class="form-control" id="stripe-sim-customer" value="cus_enterprise_99">
+          </div>
+          <button class="btn btn-gold" onclick="simulateStripeEvent()">Fire Webhook Event</button>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="promptNewKnowledge()">+ Add Knowledge Entry</button>
+
+        <div class="card">
+          <div class="card-title">
+            <span>LIVE WEBHOOK CONFIGURATION</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-light); line-height: 1.7; margin-bottom: 1rem;">
+            <strong>Production Webhook Endpoint:</strong><br>
+            <code style="background: #000; padding: 0.2rem 0.5rem; border: 1px solid var(--border-subtle); font-family: var(--font-mono); color: var(--nab-yellow);">POST https://&lt;YOUR_HOST&gt;/api/stripe/webhook</code>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">
+            Set environment variables <code>STRIPE_API_KEY</code> and <code>STRIPE_WEBHOOK_SECRET</code> to link real Stripe accounts.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: KNOWLEDGE COMPOUNDING -->
+    <div id="tab-knowledge" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Knowledge Compounding Ledger</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Decisions, Assumptions, Experiments, Outcomes, Failures, and Lessons. Undocumented knowledge is lost capital.</p>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="promptNewKnowledge()">+ Add Entry</button>
       </div>
 
       <div class="table-container">
         <table>
           <thead>
             <tr>
-              <th>Timestamp</th>
+              <th>Date</th>
               <th>Category</th>
               <th>Title</th>
-              <th>Details / Rationale</th>
+              <th>Details & Compounding Rationale</th>
               <th>Tags</th>
             </tr>
           </thead>
           <tbody id="knowledge-tbody">
-            <!-- Injected dynamically -->
+            <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TAB 6: HUMAN GOVERNANCE -->
+    <!-- TAB 7: HUMAN GOVERNANCE -->
     <div id="tab-governance" class="tab-content">
-      <div style="margin-bottom: 1.25rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 800;">Human Governance Escalation Queue</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Humans are owners and governors, not operators. Involved strictly for Legal Signatures, Identity/KYC, Banking, Regulations, and Ownership.</p>
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Human Governance Escalation Queue</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Humans are owners and governors, strictly responsible for Legal Signatures, KYC, Banking, and Equity decisions.</p>
       </div>
 
       <div class="table-container">
@@ -968,48 +1074,48 @@
               <th>Escalation Type</th>
               <th>Title</th>
               <th>Description</th>
-              <th>Risk</th>
+              <th>Risk Level</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody id="governance-tbody">
-            <!-- Injected dynamically -->
+            <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TAB 7: TREASURY STRESS SIMULATOR -->
+    <!-- TAB 8: TREASURY SIMULATOR -->
     <div id="tab-simulator" class="tab-content">
-      <div style="margin-bottom: 1.25rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 800;">Interactive Treasury & Survival Posture Simulator</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Simulate capital shocks, sudden burn increases, or MRR expansions to observe AEGIS's autonomous tactical posture shifts.</p>
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">Treasury Stress & Posture Lab</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Simulate capital shocks to observe AEGIS's autonomous tactical posture shifts.</p>
       </div>
 
       <div class="grid-2">
         <div class="card">
           <div class="card-title">
-            <span>FINANCIAL INPUT SLIDERS</span>
-            <span class="badge">SIMULATOR</span>
+            <span>FINANCIAL INPUT CONTROLS</span>
+            <span class="badge badge-gold">SIMULATOR</span>
           </div>
 
           <div class="form-group">
-            <label>Cash Reserves ($): <span id="sim-reserves-val" style="color: var(--accent-cyan);">$50,000</span></label>
+            <label>Cash Reserves ($): <span id="sim-reserves-val" style="color: var(--nab-yellow); font-family: var(--font-mono);">$50,000</span></label>
             <input type="range" class="form-control" id="slider-reserves" min="0" max="500000" step="2500" value="50000" oninput="runSimulation()">
           </div>
 
           <div class="form-group">
-            <label>Monthly Gross Burn ($): <span id="sim-burn-val" style="color: var(--accent-crimson);">$8,000</span></label>
+            <label>Monthly Gross Burn ($): <span id="sim-burn-val" style="color: #ffffff; font-family: var(--font-mono);">$8,000</span></label>
             <input type="range" class="form-control" id="slider-burn" min="500" max="50000" step="500" value="8000" oninput="runSimulation()">
           </div>
 
           <div class="form-group">
-            <label>Monthly Recurring Revenue / MRR ($): <span id="sim-rev-val" style="color: var(--accent-emerald);">$4,500</span></label>
+            <label>Monthly Revenue / MRR ($): <span id="sim-rev-val" style="color: var(--nab-beige); font-family: var(--font-mono);">$4,500</span></label>
             <input type="range" class="form-control" id="slider-rev" min="0" max="60000" step="500" value="4500" oninput="runSimulation()">
           </div>
 
-          <button class="btn btn-success" onclick="commitSimulationToState()">Apply to Live AEGIS Treasury</button>
+          <button class="btn btn-gold" onclick="commitSimulationToState()">Apply to Live AEGIS Treasury</button>
         </div>
 
         <div class="card">
@@ -1017,30 +1123,26 @@
             <span>POSTURE & TACTICAL SHIFT PREVIEW</span>
           </div>
 
-          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
+          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 4px; border: 1px solid var(--border-subtle); margin-bottom: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Simulated State:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">Simulated Posture:</span>
               <span class="state-badge STABLE" id="sim-badge">STABLE</span>
             </div>
-            <div style="font-size: 0.85rem; color: #e2e8f0; margin-bottom: 0.5rem;" id="sim-runway-calc">Simulated Runway: 300.0 Days (Net Burn: $3,500/mo)</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);" id="sim-posture-directive">Focus: Growth, expansion, product improvement, market penetration.</div>
-          </div>
-
-          <div style="font-size: 0.78rem; color: var(--text-dim); line-height: 1.6;">
-            <strong>Autonomous Rule Trigger:</strong> When runway drops below 30 days (CRITICAL), AEGIS immediately throttles high-capex ventures and boosts opportunities with &lt;14 day time-to-revenue by 2.5x.
+            <div style="font-size: 0.85rem; color: var(--text-white); margin-bottom: 0.5rem;" id="sim-runway-calc">Simulated Runway: 428.6 Days</div>
+            <div style="font-size: 0.78rem; color: var(--nab-yellow);" id="sim-posture-directive">Focus: Growth, expansion, product improvement, market penetration.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 8: SYSTEM CHARTER -->
+    <!-- TAB 9: SYSTEM CHARTER -->
     <div id="tab-charter" class="tab-content">
       <div class="card">
         <div class="card-title">
           <span>AEGIS SYSTEM CHARTER & OPERATIONAL DOCTRINE</span>
-          <span class="badge">V1.0</span>
+          <span class="badge badge-gold">V1.0</span>
         </div>
-        <pre style="background: #05070a; padding: 1.25rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; line-height: 1.6; white-space: pre-wrap;">
+        <pre style="background: #050505; padding: 1.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--nab-beige); line-height: 1.6; white-space: pre-wrap;">
 ================================================================
 AEGIS — Autonomous Economic Growth & Intelligent Survival System
 ================================================================
@@ -1073,18 +1175,6 @@ Under no circumstances may you:
 - Violate regulations
 - Cause intentional harm
 Long-term survival requires trust. Trust is a strategic asset. Protect it.
-
-REVENUE PRIORITIES:
-1. SaaS (wt: 1.00)
-2. Subscription businesses (wt: 0.95)
-3. Licensing (wt: 0.90)
-4. B2B services (wt: 0.85)
-5. Automation services (wt: 0.80)
-6. Digital products (wt: 0.70)
-7. Education (wt: 0.65)
-8. Marketplaces (wt: 0.60)
-9. Media (wt: 0.50)
-10. Advertising (wt: 0.40)
         </pre>
       </div>
     </div>
@@ -1093,29 +1183,20 @@ REVENUE PRIORITIES:
 
   <div id="toast-container"></div>
 
-  <!-- SCRIPT LOGIC -->
+  <!-- SCRIPT -->
   <script>
     const MANDATORY_DOCS = [
-      "PROJECT_OVERVIEW.md",
-      "MISSION.md",
-      "MARKET_ANALYSIS.md",
-      "COMPETITOR_ANALYSIS.md",
-      "TECHNICAL_ARCHITECTURE.md",
-      "BUSINESS_MODEL.md",
-      "REVENUE_MODEL.md",
-      "FINANCIAL_FORECAST.md",
-      "CUSTOMER_ACQUISITION.md",
-      "RETENTION_STRATEGY.md",
-      "OPERATIONS.md",
-      "AUTOMATION_PLAN.md",
-      "RISK_ASSESSMENT.md",
-      "ROADMAP.md",
-      "METRICS.md",
-      "POSTMORTEM.md"
+      "PROJECT_OVERVIEW.md", "MISSION.md", "MARKET_ANALYSIS.md", "COMPETITOR_ANALYSIS.md",
+      "TECHNICAL_ARCHITECTURE.md", "BUSINESS_MODEL.md", "REVENUE_MODEL.md", "FINANCIAL_FORECAST.md",
+      "CUSTOMER_ACQUISITION.md", "RETENTION_STRATEGY.md", "OPERATIONS.md", "AUTOMATION_PLAN.md",
+      "RISK_ASSESSMENT.md", "ROADMAP.md", "METRICS.md", "POSTMORTEM.md"
     ];
 
+    const CODE_FILES = ["app.py", "Dockerfile", "requirements.txt", "test_app.py"];
+
     let currentSelectedVenture = null;
-    let currentSelectedDoc = "PROJECT_OVERVIEW.md";
+    let currentSelectedDoc = "app.py";
+    let isCodeMode = true;
 
     function showToast(msg) {
       const c = document.getElementById("toast-container");
@@ -1145,7 +1226,6 @@ REVENUE PRIORITIES:
         const res = await fetch("/api/status");
         const data = await res.json();
         
-        // HUD Updates
         const sBadge = document.getElementById("hud-survival-state");
         sBadge.className = `state-badge ${data.survival_state}`;
         document.getElementById("hud-state-text").innerText = data.survival_state;
@@ -1154,9 +1234,7 @@ REVENUE PRIORITIES:
         document.getElementById("hud-revenue").innerText = `$${data.treasury.monthly_revenue.toLocaleString()}`;
         document.getElementById("hud-runway").innerText = `${data.treasury.runway_days} Days`;
         
-        // Dashboard cards
-        const cardState = document.getElementById("card-state-text");
-        cardState.innerText = data.survival_state;
+        document.getElementById("card-state-text").innerText = data.survival_state;
         document.getElementById("card-reserves").innerText = `$${data.treasury.cash_reserves.toLocaleString()}`;
         document.getElementById("card-burn-rev").innerText = `$${data.treasury.monthly_burn.toLocaleString()} / $${data.treasury.monthly_revenue.toLocaleString()}`;
         document.getElementById("card-net-burn").innerText = `Net Monthly Burn: $${data.treasury.net_burn.toLocaleString()}`;
@@ -1165,8 +1243,21 @@ REVENUE PRIORITIES:
         document.getElementById("quick-active-ventures").innerText = data.active_ventures_count;
         document.getElementById("quick-total-opps").innerText = data.total_opportunities_count;
         document.getElementById("tab-gov-count").innerText = data.pending_governance_count;
+
+        // Daemon button state
+        const dBtn = document.getElementById("btn-toggle-daemon");
+        const dGuide = document.getElementById("guide-daemon-status");
+        if (data.loop_active) {
+          dBtn.innerText = "⏸ Pause Daemon";
+          dBtn.className = "btn btn-gold btn-sm";
+          if (dGuide) dGuide.innerText = "Status: ACTIVE (Autonomous Background Loop Running)";
+        } else {
+          dBtn.innerText = "▶ Start Daemon";
+          dBtn.className = "btn btn-outline btn-sm";
+          if (dGuide) dGuide.innerText = "Status: Standby";
+        }
       } catch (err) {
-        console.error("Fetch status error:", err);
+        console.error("Status error:", err);
       }
     }
 
@@ -1183,7 +1274,7 @@ REVENUE PRIORITIES:
           const time = l.timestamp ? l.timestamp.split("T")[1].slice(0,8) : "";
           div.innerHTML = `
             <span class="log-time">${time}</span>
-            <span class="log-stage stage-${l.stage}">${l.stage}</span>
+            <span class="log-stage">${l.stage}</span>
             <span class="log-msg">${l.message}</span>
           `;
           container.appendChild(div);
@@ -1195,7 +1286,7 @@ REVENUE PRIORITIES:
 
     async function triggerLoopCycle() {
       const btn = document.getElementById("btn-run-loop");
-      btn.innerText = "⏳ Running Loop...";
+      btn.innerText = "⏳ Running...";
       btn.disabled = true;
 
       try {
@@ -1205,10 +1296,75 @@ REVENUE PRIORITIES:
         await fetchStatus();
         await fetchExecutionLogs();
       } catch (err) {
-        showToast("Error running loop cycle");
+        showToast("Error running cycle");
       } finally {
-        btn.innerText = "⚡ Run Value Loop";
+        btn.innerText = "⚡ Run Loop";
         btn.disabled = false;
+      }
+    }
+
+    async function toggleDaemon() {
+      const res = await fetch("/api/status");
+      const data = await res.json();
+      if (data.loop_active) {
+        await stopDaemon();
+      } else {
+        await startDaemon();
+      }
+    }
+
+    async function startDaemon() {
+      await fetch("/api/daemon/start", { method: "POST" });
+      showToast("AEGIS Autonomous Background Daemon started.");
+      await fetchStatus();
+    }
+
+    async function stopDaemon() {
+      await fetch("/api/daemon/stop", { method: "POST" });
+      showToast("AEGIS Autonomous Background Daemon paused.");
+      await fetchStatus();
+    }
+
+    async function runLiveUrlAudit() {
+      const url = document.getElementById("input-audit-url").value;
+      const out = document.getElementById("division-output");
+      const badge = document.getElementById("division-active-badge");
+      badge.innerText = "AUDITING LIVE URL...";
+      out.innerText = `Fetching live HTTP content from ${url}...`;
+
+      try {
+        const res = await fetch("/api/research/audit-url", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        badge.innerText = "AUDIT COMPLETE";
+        out.innerText = JSON.stringify(data, null, 2);
+        showToast("Live URL audit complete.");
+      } catch (err) {
+        badge.innerText = "ERROR";
+        out.innerText = "Audit failed.";
+      }
+    }
+
+    async function simulateStripeEvent() {
+      const evType = document.getElementById("stripe-sim-type").value;
+      const amount = parseFloat(document.getElementById("stripe-sim-amount").value);
+      const customer = document.getElementById("stripe-sim-customer").value;
+
+      try {
+        const res = await fetch("/api/stripe/simulate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event_type: evType, amount: amount, customer: customer })
+        });
+        const data = await res.json();
+        showToast(`Stripe Event Processed: ${data.action_taken}`);
+        await fetchStatus();
+        await fetchExecutionLogs();
+      } catch (err) {
+        showToast("Error simulating event");
       }
     }
 
@@ -1227,10 +1383,10 @@ REVENUE PRIORITIES:
         const data = await res.json();
         badge.innerText = `${divName} SUCCESS`;
         out.innerText = JSON.stringify(data, null, 2);
-        showToast(`${divName} directive executed successfully.`);
+        showToast(`${divName} directive executed.`);
       } catch (err) {
         badge.innerText = "ERROR";
-        out.innerText = "Failed to execute division directive.";
+        out.innerText = "Execution failed.";
       }
     }
 
@@ -1244,21 +1400,21 @@ REVENUE PRIORITIES:
         opps.forEach(o => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td style="font-weight: 700;">${o.title}</td>
-            <td><span class="badge" style="background: rgba(6,182,212,0.1); color: var(--accent-cyan);">${o.category}</span></td>
-            <td style="color: var(--accent-emerald); font-family: var(--font-mono);">$${o.profit_potential_monthly.toLocaleString()}/mo</td>
+            <td style="font-weight: 700; color: #fff;">${o.title}</td>
+            <td><span class="badge badge-gold">${o.category}</span></td>
+            <td style="color: var(--nab-beige); font-family: var(--font-mono);">$${o.profit_potential_monthly.toLocaleString()}/mo</td>
             <td style="font-family: var(--font-mono);">${o.time_to_revenue_days}d</td>
             <td style="font-family: var(--font-mono);">$${o.capital_required.toLocaleString()}</td>
             <td style="font-family: var(--font-mono); font-weight: 700;">$${o.expected_value_score.toLocaleString()}</td>
-            <td><span class="badge" style="background: rgba(16,185,129,0.2); color: #34d399; font-weight: 800;">${o.raroe_score} / 100</span></td>
+            <td><span class="badge" style="color: var(--nab-yellow); font-weight: 800;">${o.raroe_score} / 100</span></td>
             <td>
-              <button class="btn btn-outline btn-sm" onclick="provisionFromOpp('${o.title.replace(/'/g, "\\'")}', '${o.category}', '${o.profit_potential_monthly}', '${o.capital_required}')">🚀 Launch Venture</button>
+              <button class="btn btn-outline btn-sm" onclick="provisionFromOpp('${o.title.replace(/'/g, "\\'")}', '${o.category}', '${o.profit_potential_monthly}', '${o.capital_required}')">🚀 Launch</button>
             </td>
           `;
           tbody.appendChild(tr);
         });
       } catch (err) {
-        console.error("Load opps error:", err);
+        console.error("Opps error:", err);
       }
     }
 
@@ -1309,7 +1465,7 @@ REVENUE PRIORITIES:
           })
         });
         const v = await res.json();
-        showToast(`Venture ${v.name} initialized with 16 core documents!`);
+        showToast(`Venture ${v.name} & functional Python microservice scaffolded!`);
         switchTab("tab-ventures");
       } catch (err) {
         showToast("Error launching venture");
@@ -1334,7 +1490,7 @@ REVENUE PRIORITIES:
           currentSelectedVenture = list[0];
           sel.value = currentSelectedVenture.id;
           renderDocSidebar();
-          loadVentureDoc(currentSelectedDoc);
+          loadFileContent(currentSelectedDoc, isCodeMode);
         }
       } catch (err) {
         console.error("Venture list error:", err);
@@ -1342,19 +1498,36 @@ REVENUE PRIORITIES:
     }
 
     function renderDocSidebar() {
-      const container = document.getElementById("doc-nav-list");
-      container.innerHTML = "";
+      const codeContainer = document.getElementById("code-nav-list");
+      codeContainer.innerHTML = "";
+      CODE_FILES.forEach(fileName => {
+        const item = document.createElement("div");
+        item.className = `doc-list-item ${fileName === currentSelectedDoc && isCodeMode ? 'active' : ''}`;
+        item.innerText = `⚙️ ${fileName}`;
+        item.onclick = () => {
+          document.querySelectorAll(".doc-list-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+          currentSelectedDoc = fileName;
+          isCodeMode = true;
+          loadFileContent(fileName, true);
+        };
+        codeContainer.appendChild(item);
+      });
+
+      const docContainer = document.getElementById("doc-nav-list");
+      docContainer.innerHTML = "";
       MANDATORY_DOCS.forEach(docName => {
         const item = document.createElement("div");
-        item.className = `doc-list-item ${docName === currentSelectedDoc ? 'active' : ''}`;
+        item.className = `doc-list-item ${docName === currentSelectedDoc && !isCodeMode ? 'active' : ''}`;
         item.innerText = `📄 ${docName}`;
         item.onclick = () => {
           document.querySelectorAll(".doc-list-item").forEach(el => el.classList.remove("active"));
           item.classList.add("active");
           currentSelectedDoc = docName;
-          loadVentureDoc(docName);
+          isCodeMode = false;
+          loadFileContent(docName, false);
         };
-        container.appendChild(item);
+        docContainer.appendChild(item);
       });
     }
 
@@ -1363,27 +1536,29 @@ REVENUE PRIORITIES:
       const vId = sel.value;
       const res = await fetch(`/api/ventures/${vId}`);
       currentSelectedVenture = await res.json();
-      loadVentureDoc(currentSelectedDoc);
+      loadFileContent(currentSelectedDoc, isCodeMode);
     }
 
-    async function loadVentureDoc(docName) {
+    async function loadFileContent(fileName, isCode) {
       if (!currentSelectedVenture) return;
-      document.getElementById("doc-active-title").innerText = docName;
+      document.getElementById("doc-active-title").innerText = fileName;
       document.getElementById("doc-venture-badge").innerText = currentSelectedVenture.name;
 
+      const endpoint = isCode ? `/api/ventures/${currentSelectedVenture.id}/files/${fileName}` : `/api/ventures/${currentSelectedVenture.id}/docs/${fileName}`;
+
       try {
-        const res = await fetch(`/api/ventures/${currentSelectedVenture.id}/docs/${docName}`);
+        const res = await fetch(endpoint);
         const data = await res.json();
         document.getElementById("doc-active-content").innerText = data.content;
       } catch (err) {
-        document.getElementById("doc-active-content").innerText = "Generating artifact...";
+        document.getElementById("doc-active-content").innerText = "Loading file content...";
       }
     }
 
     async function promptNewVenture() {
-      const name = prompt("Enter Venture Name (e.g. LeadPulse AI):");
+      const name = prompt("Enter Venture Name (e.g. DocuSync API):");
       if (!name) return;
-      const tagline = prompt("Enter Tagline / Core Value Delivery:", "Autonomous lead enrichment API");
+      const tagline = prompt("Enter Value Proposition:", "Autonomous API Integration");
       
       try {
         const res = await fetch("/api/ventures/create", {
@@ -1392,13 +1567,13 @@ REVENUE PRIORITIES:
           body: JSON.stringify({
             name: name,
             category: "SaaS",
-            tagline: tagline || "Autonomous Value Producer",
+            tagline: tagline || "Autonomous Microservice",
             target_mrr: 20000.0,
             initial_budget: 1500.0
           })
         });
         const v = await res.json();
-        showToast(`Created venture ${v.name} and all 16 docs!`);
+        showToast(`Created venture ${v.name} + runnable code bundle + 16 docs!`);
         await loadVenturesList();
       } catch (err) {
         showToast("Failed to create venture");
@@ -1417,9 +1592,9 @@ REVENUE PRIORITIES:
           const time = k.timestamp ? k.timestamp.split("T")[0] : "";
           tr.innerHTML = `
             <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">${time}</td>
-            <td><span class="badge" style="background: rgba(139,92,246,0.15); color: #c084fc; font-weight: 700;">${k.category}</span></td>
-            <td style="font-weight: 700;">${k.title}</td>
-            <td style="color: #cbd5e1; max-width: 450px;">${k.content}</td>
+            <td><span class="badge badge-gold">${k.category}</span></td>
+            <td style="font-weight: 700; color: #fff;">${k.title}</td>
+            <td style="color: var(--text-light); max-width: 450px;">${k.content}</td>
             <td>${k.tags.map(t => `<span class="badge" style="margin-right:3px;">#${t}</span>`).join('')}</td>
           `;
           tbody.appendChild(tr);
@@ -1432,21 +1607,16 @@ REVENUE PRIORITIES:
     async function promptNewKnowledge() {
       const title = prompt("Enter Knowledge Title:");
       if (!title) return;
-      const content = prompt("Enter Key Insight / Lesson Learned / Decision Rationale:");
+      const content = prompt("Enter Insight / Lesson Learned:");
       if (!content) return;
 
       try {
         await fetch("/api/knowledge/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            category: "LESSON",
-            title: title,
-            content: content,
-            tags: ["compounding", "manual_entry"]
-          })
+          body: JSON.stringify({ category: "LESSON", title: title, content: content, tags: ["compounding"] })
         });
-        showToast("Knowledge entry added to permanent ledger.");
+        showToast("Knowledge logged to ledger.");
         await loadKnowledge();
       } catch (err) {
         showToast("Failed to add knowledge");
@@ -1464,15 +1634,15 @@ REVENUE PRIORITIES:
           const tr = document.createElement("tr");
           const isPending = g.status === "PENDING";
           tr.innerHTML = `
-            <td><span class="badge" style="color: var(--accent-gold);">${g.type}</span></td>
-            <td style="font-weight: 700;">${g.title}</td>
-            <td style="color: #cbd5e1; max-width: 350px;">${g.description}</td>
+            <td><span class="badge badge-gold">${g.type}</span></td>
+            <td style="font-weight: 700; color: #fff;">${g.title}</td>
+            <td style="color: var(--text-light); max-width: 350px;">${g.description}</td>
             <td><span class="badge">${g.risk_level}</span></td>
-            <td><span class="badge ${g.status === 'APPROVED' ? 'style="color:#34d399;"' : ''}">${g.status}</span></td>
+            <td><span class="badge ${g.status === 'APPROVED' ? 'badge-gold' : ''}">${g.status}</span></td>
             <td>
               ${isPending ? `
-                <button class="btn btn-success btn-sm" onclick="resolveGov('${g.id}', true)">Approve</button>
-                <button class="btn btn-danger btn-sm" onclick="resolveGov('${g.id}', false)">Reject</button>
+                <button class="btn btn-gold btn-sm" onclick="resolveGov('${g.id}', true)">Approve</button>
+                <button class="btn btn-outline btn-sm" onclick="resolveGov('${g.id}', false)">Reject</button>
               ` : `<span style="font-size:0.75rem; color:var(--text-dim);">${g.resolver_notes || 'Resolved'}</span>`}
             </td>
           `;
@@ -1480,7 +1650,7 @@ REVENUE PRIORITIES:
         });
         document.getElementById("tab-gov-count").innerText = data.pending.length;
       } catch (err) {
-        console.error("Governance load error:", err);
+        console.error("Governance error:", err);
       }
     }
 
@@ -1495,7 +1665,7 @@ REVENUE PRIORITIES:
         await loadGovernance();
         await fetchStatus();
       } catch (err) {
-        showToast("Error resolving governance item");
+        showToast("Error resolving item");
       }
     }
 
@@ -1544,13 +1714,9 @@ REVENUE PRIORITIES:
         await fetch("/api/treasury/update", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cash_reserves: reserves,
-            monthly_burn: burn,
-            monthly_revenue: rev
-          })
+          body: JSON.stringify({ cash_reserves: reserves, monthly_burn: burn, monthly_revenue: rev })
         });
-        showToast("Simulated financial state committed to live AEGIS organism.");
+        showToast("Financial state committed to live AEGIS organism.");
         await fetchStatus();
       } catch (err) {
         showToast("Error updating treasury");
@@ -1561,7 +1727,6 @@ REVENUE PRIORITIES:
     setInterval(fetchStatus, 5000);
     setInterval(fetchExecutionLogs, 4000);
 
-    // Initial boot
     fetchStatus();
     fetchExecutionLogs();
   </script>

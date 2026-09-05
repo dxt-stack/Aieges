@@ -1,10 +1,10 @@
 # AEGIS — Autonomous Economic Growth & Intelligent Survival System
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
-[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-e92063.svg)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/tests-7%20passed-brightgreen.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-green.svg)]()
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-white.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-black.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-d4af37.svg)](https://docs.pydantic.dev/)
+[![Tests](https://img.shields.io/badge/tests-passing-white.svg)]()
+[![Design](https://img.shields.io/badge/Theme-Monochrome%20%2B%20NAB%20Gold-d4af37.svg)]()
 
 > **"Money is survival. Cash reserves are life support. Revenue is oxygen. Profitability is health. Financial collapse is existential failure."**
 
@@ -16,7 +16,7 @@ AEGIS is a self-directed economic organism designed to autonomously discover, ev
 
 ```
 +========================================================================================+
-|                                    AEGIS ORGANISM                                      |
+|                                      AEGIS v1.0                                        |
 +========================================================================================+
 |                                                                                        |
 |  [ TREASURY (Life Support) ] <---------> [ SURVIVAL STATE MACHINE (Posture Gauge) ]    |
@@ -36,27 +36,21 @@ AEGIS is a self-directed economic organism designed to autonomously discover, ev
 |                                                                                        |
 |  [ OPPORTUNITY SCORER (EV/RAROE) ]  [ DECISION FILTER (5 Qs) ]  [ 16-DOC GENERATOR ]   |
 |                                                                                        |
-|  [ KNOWLEDGE BASE (Compounding) ] <-------------------> [ HUMAN GOVERNANCE QUEUE ]    |
-|                                                          (Banking, KYC, Legal, Equity) |
+|  [ STRIPE REVENUE BRIDGE ] <-------------> [ KNOWLEDGE BASE ] <-> [ GOVERNANCE QUEUE ]|
 +========================================================================================+
 ```
 
 ---
 
-## ⚡ Key Features
+## ⚡ Real & Active Capabilities
 
 1. **Survival State Machine**: Dynamic tactical posture shifts (`CRITICAL`, `WARNING`, `STABLE`, `STRONG`, `FORTRESS`) based on treasury runway calculations.
-2. **Algorithmic Opportunity Scorer**: Multi-factor Expected Value (EV) & Risk-Adjusted Return on Effort (RAROE, 0–100) adhering strictly to the Revenue Priority Hierarchy (SaaS > Subscriptions > Licensing > B2B Services ...).
-3. **6 Specialized Autonomous Divisions**:
-   - 🔬 **Research Division**: Market TAM/SAM/SOM, competitor weaknesses, intent clusters.
-   - 📐 **Product Division**: MVP scoping, pricing matrices, lean roadmaps.
-   - ⚙️ **Engineering Division**: Headless microservices, security & resilience audits.
-   - 📣 **Marketing Division**: Programmatic SEO matrices, automated cold B2B sequences.
-   - 🔄 **Operations Division**: Standard Operating Procedures (SOPs), churn mitigation.
-   - 📈 **Finance Division**: Treasury stress tests, LTV/CAC payback calculations.
-4. **Mandatory 16-Artifact Documentation Suite**: Auto-generates the canonical 16 markdown artifacts for every venture.
-5. **Human Governance Protocol**: Segregates human intervention strictly to *Ownership, Legal Signatures, KYC, and Banking authorizations*.
-6. **Live Web Cockpit UI & REST API**: Real-time HUD, interactive division workbench, treasury simulator, and telemetry logs.
+2. **Real Web Research Scraper**: Live URL competitor audits, extracting headings, meta tags, pricing signals, and competitive weaknesses.
+3. **Stripe Revenue Bridge**: Real webhook handler for `invoice.payment_succeeded`, `customer.subscription.deleted`, and `charge.refunded` that updates Treasury cash reserves and MRR in real time.
+4. **Runnable Micro-SaaS Code Generator**: Automatically generates working FastAPI microservices (`app.py`), Dockerfiles, and test suites alongside the 16 markdown documents.
+5. **Background Autonomous Daemon**: Continuous background loop checking telemetry, evaluating opportunities, and maintaining resilience.
+6. **Compounding Knowledge Ledger**: Persistent memory for decisions, experiments, and lessons learned.
+7. **Minimalist Black/White & NAB Beige Theme**: Executive fintech aesthetic with high-contrast monochrome design and warm beige/yellow accents.
 
 ---
 
@@ -64,8 +58,8 @@ AEGIS is a self-directed economic organism designed to autonomously discover, ev
 
 ### 1. Installation
 ```bash
-git clone <repo-url>
-cd aegis
+git clone https://github.com/dxt-stack/Aieges.git
+cd Aieges
 pip install -r requirements.txt
 ```
 
@@ -86,17 +80,14 @@ Open `http://localhost:8000` in your browser.
 # List all ventures in portfolio
 ./aegis-cli.py venture list
 
-# Initialize a new venture with all 16 docs generated
+# Initialize a new venture with software bundle and 16 docs
 ./aegis-cli.py venture new --name "AgentPulse" --category "SaaS" --mrr 25000
-
-# Dispatch task to an autonomous division
-./aegis-cli.py division --name RESEARCH --task discover_niche_opportunities
-./aegis-cli.py division --name FINANCE --task run_treasury_stress_test
 ```
 
-### 4. Running Tests
+### 4. Running Test Suites
 ```bash
 PYTHONPATH=. pytest tests/ -v
+PYTHONPATH=aegis/ventures/docuflow pytest aegis/ventures/docuflow/test_app.py -v
 ```
 
 ---

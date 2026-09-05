@@ -19,6 +19,7 @@ from aegis.core.decision_filter import DecisionFilter
 from aegis.core.doc_generator import DocumentGenerator
 from aegis.core.knowledge_base import KnowledgeBase
 from aegis.governance import GovernanceManager
+from aegis.integrations.code_generator import VentureCodeGenerator
 
 from aegis.divisions.research import ResearchDivision
 from aegis.divisions.product import ProductDivision
@@ -74,7 +75,7 @@ class AegisOrchestrator:
         2. ANALYZE (Runway Stress Tests, Operational Bottlenecks)
         3. DISCOVER (Research scan for asymmetric revenue opportunities)
         4. PRIORITIZE (Score opportunities by EV & Survival Fit)
-        5. PLAN (Generate specifications & 16-Doc Suite for top candidate)
+        5. PLAN (Generate specifications & 16-Doc Suite + Microservice Code for top candidate)
         6. BUILD & DEPLOY (Engineering & Marketing automated scaffolding)
         7. MEASURE & IMPROVE (Record Knowledge, log metrics, compound learnings)
         """
@@ -126,7 +127,7 @@ class AegisOrchestrator:
         
         self._log("PRIORITIZE", f"Cycle #{it_num}: Scored and ranked {len(ranked_opps)} opportunities. Top priority: '{top_opportunity.title if top_opportunity else 'None'}' (RAROE: {top_opportunity.raroe_score if top_opportunity else 0})")
 
-        # Step 5: PLAN (Run Decision Filter & Generate 16-Doc Suite)
+        # Step 5: PLAN (Run Decision Filter & Generate 16-Doc Suite + Code)
         action_plan_summary = "Idle cycle"
         new_venture_created = None
 
@@ -141,7 +142,6 @@ class AegisOrchestrator:
             )
 
             if filter_res.approved:
-                # Provision Venture & 16-doc artifacts
                 slug = top_opportunity.title.lower().split("(")[0].strip().replace(" ", "-").replace("_", "")
                 existing_v = next((v for v in self.state_mgr.ventures.values() if v.slug == slug), None)
                 
@@ -156,25 +156,32 @@ class AegisOrchestrator:
                         initial_budget=top_opportunity.capital_required
                     )
 
-                    # Generate 16 Docs
+                    # 1. Generate 16 Canonical Docs
                     docs = DocumentGenerator.generate_full_suite(new_venture, top_opportunity)
                     new_venture.documents = docs
-                    
-                    # Write to workspace disk
                     v_dir = os.path.join(self.workspace_root, "ventures", slug)
                     DocumentGenerator.write_to_disk(v_dir, docs)
 
+                    # 2. Generate Real Functional Software Bundle (app.py, Dockerfile, etc.)
+                    VentureCodeGenerator.generate_software_bundle(
+                        venture_dir=v_dir,
+                        name=new_venture.name,
+                        slug=new_venture.slug,
+                        category=new_venture.category.value if hasattr(new_venture.category, 'value') else str(new_venture.category),
+                        tagline=new_venture.tagline
+                    )
+
                     self.state_mgr.add_venture(new_venture)
                     new_venture_created = new_venture
-                    action_plan_summary = f"Provisioned autonomous venture '{new_venture.name}' with complete 16-artifact documentation."
+                    action_plan_summary = f"Provisioned autonomous venture '{new_venture.name}' with complete 16-artifact documentation and functional Python microservice."
                     
-                    self._log("PLAN", f"Cycle #{it_num}: Approved by Decision Filter. Created venture '{new_venture.name}' with 16 core documents in {v_dir}.")
+                    self._log("PLAN", f"Cycle #{it_num}: Created venture '{new_venture.name}' with 16 core documents and runnable micro-SaaS code in {v_dir}.")
                     
                     # Log Knowledge Entry
                     self.knowledge_base.add_entry(
                         category=KnowledgeCategoryEnum.DECISION,
                         title=f"Greenlit Venture {new_venture.name}",
-                        content=f"Evaluated opportunity with EV score ${top_opportunity.expected_value_score} and RAROE {top_opportunity.raroe_score}. Generated 16-doc architectural and financial suite.",
+                        content=f"Evaluated opportunity with EV score ${top_opportunity.expected_value_score} and RAROE {top_opportunity.raroe_score}. Scaffolding generated.",
                         venture_id=new_venture.id,
                         tags=["venture_launch", new_venture.slug, "ev_prioritization"]
                     )
@@ -206,9 +213,6 @@ class AegisOrchestrator:
         }
 
     def evaluate_custom_opportunity(self, opp_data: Dict[str, Any]) -> Opportunity:
-        """
-        Takes raw user input, creates an Opportunity object, calculates EV & RAROE, and stores it.
-        """
         cat_val = opp_data.get("category", "SaaS")
         cat_enum = RevenuePriorityEnum(cat_val) if cat_val in [c.value for c in RevenuePriorityEnum] else RevenuePriorityEnum.SAAS
 
@@ -252,21 +256,31 @@ class AegisOrchestrator:
             key_metrics={"uptime_percentage": 99.99, "active_users": 0}
         )
 
+        # 1. 16 Canonical Markdown Documents
         docs = DocumentGenerator.generate_full_suite(venture)
         venture.documents = docs
 
         v_dir = os.path.join(self.workspace_root, "ventures", slug)
         DocumentGenerator.write_to_disk(v_dir, docs)
 
+        # 2. Real Functional Code Bundle
+        VentureCodeGenerator.generate_software_bundle(
+            venture_dir=v_dir,
+            name=venture.name,
+            slug=venture.slug,
+            category=venture.category.value if hasattr(venture.category, 'value') else str(venture.category),
+            tagline=venture.tagline
+        )
+
         self.state_mgr.add_venture(venture)
         
         self.knowledge_base.add_entry(
             category=KnowledgeCategoryEnum.DECISION,
             title=f"Initialized Venture: {venture.name}",
-            content=f"Created {venture.name} under {cat_enum.value} category. Generated canonical 16 markdown artifacts.",
+            content=f"Created {venture.name} under {cat_enum.value} category. Generated canonical 16 markdown artifacts and runnable Python microservice.",
             venture_id=venture.id,
             tags=["venture_creation", slug]
         )
 
-        self._log("VENTURE_CREATED", f"Initialized {venture.name} ({venture.slug}) with 16 core documentation files in {v_dir}")
+        self._log("VENTURE_CREATED", f"Initialized {venture.name} ({venture.slug}) with 16 core documentation files and microservice in {v_dir}")
         return venture

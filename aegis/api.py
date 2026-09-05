@@ -3,7 +3,7 @@ AEGIS REST API & Application Server
 FastAPI-powered backend for the Autonomous Economic Growth & Intelligent Survival System.
 """
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 import os
 
+import time
 from aegis.orchestrator import AegisOrchestrator
 from aegis.core.models import (
     SurvivalStateEnum, RevenuePriorityEnum, GovernanceTypeEnum,
@@ -19,14 +20,17 @@ from aegis.core.models import (
 from aegis.core.opportunity_scorer import OpportunityScorer
 from aegis.core.decision_filter import DecisionFilter
 from aegis.core.doc_generator import DocumentGenerator
+from aegis.integrations.stripe_bridge import StripeBridge
+from aegis.integrations.research_engine import LiveResearchEngine
+from aegis.integrations.code_generator import VentureCodeGenerator
+from aegis.daemon.daemon import AegisDaemon
 
 app = FastAPI(
-    title="AEGIS Cockpit API",
+    title="AEGIS Autonomous Intelligence API",
     description="Autonomous Economic Growth & Intelligent Survival System API",
     version="1.0.0"
 )
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,22 +39,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files
 static_dir = "/home/user/aegis/static"
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# Initialize Orchestrator singleton
+# Initialize Orchestrator, Stripe Bridge, and Daemon singletons
 orchestrator = AegisOrchestrator(workspace_root="/home/user/aegis")
+stripe_bridge = StripeBridge(orchestrator)
+daemon = AegisDaemon(orchestrator, interval_seconds=45)
 
-# Preload sample venture documents if not generated yet
-for v_id, v in orchestrator.state_mgr.ventures.items():
-    if not v.documents:
-        docs = DocumentGenerator.generate_full_suite(v)
-        v.documents = docs
-        v_dir = os.path.join(orchestrator.workspace_root, "ventures", v.slug)
-        DocumentGenerator.write_to_disk(v_dir, docs)
-orchestrator.state_mgr._save_ventures()
+# Ensure software bundles are present for active ventures
+for v in orchestrator.state_mgr.ventures.values():
+    v_dir = os.path.join(orchestrator.workspace_root, "ventures", v.slug)
+    VentureCodeGenerator.generate_software_bundle(
+        venture_dir=v_dir,
+        name=v.name,
+        slug=v.slug,
+        category=v.category.value if hasattr(v.category, 'value') else str(v.category),
+        tagline=v.tagline
+    )
 
 
 # ==========================================
@@ -113,13 +120,22 @@ class DivisionExecuteRequest(BaseModel):
     venture_id: Optional[str] = None
 
 
+class StripeSimulateRequest(BaseModel):
+    event_type: str  # invoice.payment_succeeded, customer.subscription.deleted, charge.refunded
+    amount: float = 149.0
+    customer: str = "cus_aegis_corp"
+
+
+class UrlAuditRequest(BaseModel):
+    url: str
+
+
 # ==========================================
 # Endpoints
 # ==========================================
 
 @app.get("/api/status")
 async def get_system_status():
-    """Returns high-level AEGIS organism health, posture, and treasury."""
     state = orchestrator.state_mgr.state
     return {
         "status": "OPERATIONAL",
@@ -135,6 +151,7 @@ async def get_system_status():
             "target_reserves": state.treasury.target_reserves,
             "updated_at": state.treasury.updated_at
         },
+        "loop_active": daemon.is_running,
         "loop_iteration": state.loop_iteration,
         "last_loop_timestamp": state.last_loop_timestamp,
         "active_ventures_count": len([v for v in orchestrator.state_mgr.ventures.values() if v.status == "ACTIVE"]),
@@ -145,9 +162,25 @@ async def get_system_status():
     }
 
 
+@app.post("/api/daemon/start")
+async def start_daemon():
+    await daemon.start()
+    return {"message": "AEGIS Autonomous Daemon activated", "status": daemon.get_status()}
+
+
+@app.post("/api/daemon/stop")
+async def stop_daemon():
+    await daemon.stop()
+    return {"message": "AEGIS Autonomous Daemon halted", "status": daemon.get_status()}
+
+
+@app.get("/api/daemon/status")
+async def get_daemon_status():
+    return daemon.get_status()
+
+
 @app.post("/api/treasury/update")
 async def update_treasury(payload: TreasuryUpdateRequest):
-    """Updates treasury variables and recalculates survival state in real time."""
     updated = orchestrator.state_mgr.update_treasury(
         cash_reserves=payload.cash_reserves,
         monthly_burn=payload.monthly_burn,
@@ -163,20 +196,17 @@ async def update_treasury(payload: TreasuryUpdateRequest):
 
 @app.post("/api/loop/execute-step")
 async def execute_loop_step():
-    """Executes a full single cycle of the Value Creation Loop."""
     result = orchestrator.execute_single_loop_cycle()
     return result
 
 
 @app.get("/api/loop/logs")
 async def get_execution_logs(limit: int = 50):
-    """Returns latest telemetry logs from orchestrator."""
     return orchestrator.execution_logs[:limit]
 
 
 @app.get("/api/opportunities")
 async def list_opportunities():
-    """Returns all evaluated opportunities ranked by expected value and RAROE."""
     all_opps = list(orchestrator.state_mgr.opportunities.values())
     ranked = OpportunityScorer.score_and_rank(all_opps, orchestrator.current_state)
     return ranked
@@ -184,14 +214,12 @@ async def list_opportunities():
 
 @app.post("/api/opportunities/evaluate")
 async def evaluate_opportunity(payload: OpportunityCreateRequest):
-    """Scores a custom opportunity, applies decision filter, and stores it."""
     opp = orchestrator.evaluate_custom_opportunity(payload.model_dump())
     return opp
 
 
 @app.post("/api/filter/evaluate")
 async def run_decision_filter(payload: DecisionFilterRequest):
-    """Evaluates an action proposal against the 5 survival questions and absolute rules."""
     result = DecisionFilter.evaluate(
         action_title=payload.action_title,
         action_description=payload.action_description,
@@ -205,13 +233,11 @@ async def run_decision_filter(payload: DecisionFilterRequest):
 
 @app.get("/api/ventures")
 async def list_ventures():
-    """Returns all active ventures in the AEGIS portfolio."""
     return list(orchestrator.state_mgr.ventures.values())
 
 
 @app.get("/api/ventures/{venture_id}")
 async def get_venture(venture_id: str):
-    """Returns a specific venture by ID."""
     v = orchestrator.state_mgr.ventures.get(venture_id)
     if not v:
         raise HTTPException(status_code=404, detail="Venture not found")
@@ -220,16 +246,13 @@ async def get_venture(venture_id: str):
 
 @app.get("/api/ventures/{venture_id}/docs/{doc_name}")
 async def get_venture_doc(venture_id: str, doc_name: str):
-    """Returns one of the 16 mandatory documents for a venture."""
     v = orchestrator.state_mgr.ventures.get(venture_id)
     if not v:
         raise HTTPException(status_code=404, detail="Venture not found")
     
-    # Check if doc exists in venture object
     if doc_name in v.documents:
         return {"venture_name": v.name, "doc_name": doc_name, "content": v.documents[doc_name]}
     
-    # Check filesystem
     v_dir = os.path.join(orchestrator.workspace_root, "ventures", v.slug)
     doc_path = os.path.join(v_dir, doc_name)
     if os.path.exists(doc_path):
@@ -241,9 +264,24 @@ async def get_venture_doc(venture_id: str, doc_name: str):
     raise HTTPException(status_code=404, detail=f"Document '{doc_name}' not found for venture {v.name}")
 
 
+@app.get("/api/ventures/{venture_id}/files/{filename}")
+async def get_venture_code_file(venture_id: str, filename: str):
+    v = orchestrator.state_mgr.ventures.get(venture_id)
+    if not v:
+        raise HTTPException(status_code=404, detail="Venture not found")
+    
+    v_dir = os.path.join(orchestrator.workspace_root, "ventures", v.slug)
+    file_path = os.path.join(v_dir, filename)
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+            return {"venture_name": v.name, "filename": filename, "content": content}
+
+    raise HTTPException(status_code=404, detail=f"File '{filename}' not found in venture bundle")
+
+
 @app.post("/api/ventures/create")
 async def create_venture(payload: VentureCreateRequest):
-    """Creates a new venture and automatically generates all 16 canonical documents."""
     venture = orchestrator.create_venture_and_docs(
         venture_name=payload.name,
         category=payload.category,
@@ -256,7 +294,6 @@ async def create_venture(payload: VentureCreateRequest):
 
 @app.get("/api/knowledge")
 async def list_knowledge(category: Optional[str] = None, search: Optional[str] = None):
-    """Returns knowledge base records."""
     cat_enum = None
     if category:
         try:
@@ -271,7 +308,6 @@ async def list_knowledge(category: Optional[str] = None, search: Optional[str] =
 
 @app.post("/api/knowledge/create")
 async def create_knowledge_entry(payload: KnowledgeCreateRequest):
-    """Adds a new entry to the compounding knowledge base."""
     cat_enum = KnowledgeCategoryEnum(payload.category.upper()) if payload.category.upper() in [c.value for c in KnowledgeCategoryEnum] else KnowledgeCategoryEnum.LESSON
     entry = orchestrator.knowledge_base.add_entry(
         category=cat_enum,
@@ -285,7 +321,6 @@ async def create_knowledge_entry(payload: KnowledgeCreateRequest):
 
 @app.get("/api/governance")
 async def get_governance_requests():
-    """Returns human governance queue."""
     return {
         "pending": orchestrator.governance.get_pending(),
         "all": orchestrator.governance.get_all()
@@ -294,12 +329,10 @@ async def get_governance_requests():
 
 @app.post("/api/governance/{item_id}/resolve")
 async def resolve_governance(item_id: str, payload: GovernanceResolutionRequest):
-    """Resolves a human governance item (Approval or Rejection)."""
     resolved = orchestrator.governance.resolve(item_id, approved=payload.approved, notes=payload.notes)
     if not resolved:
         raise HTTPException(status_code=404, detail="Governance item not found")
     
-    # Log to knowledge base
     orchestrator.knowledge_base.add_entry(
         category=KnowledgeCategoryEnum.DECISION,
         title=f"Governor {'Approved' if payload.approved else 'Rejected'}: {resolved.title}",
@@ -312,7 +345,6 @@ async def resolve_governance(item_id: str, payload: GovernanceResolutionRequest)
 
 @app.post("/api/divisions/{division_name}/execute")
 async def execute_division_directive(division_name: str, payload: DivisionExecuteRequest):
-    """Dispatches a domain directive to one of the 6 autonomous divisions."""
     div_name_upper = division_name.upper()
     venture = orchestrator.state_mgr.ventures.get(payload.venture_id) if payload.venture_id else None
     survival_state = orchestrator.current_state
@@ -341,9 +373,48 @@ async def execute_division_directive(division_name: str, payload: DivisionExecut
     return result
 
 
+@app.post("/api/stripe/webhook")
+async def receive_stripe_webhook(request: Request):
+    """Receives live Stripe webhooks."""
+    try:
+        payload = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+    
+    res = stripe_bridge.handle_webhook_event(payload)
+    return res
+
+
+@app.post("/api/stripe/simulate")
+async def simulate_stripe_event(payload: StripeSimulateRequest):
+    """Simulates a live billing or refund event to demonstrate real treasury reaction."""
+    cents = int(payload.amount * 100)
+    fake_event = {
+        "id": f"evt_sim_{int(time.time())}",
+        "type": payload.event_type,
+        "data": {
+            "object": {
+                "amount_paid": cents,
+                "amount": cents,
+                "amount_refunded": cents,
+                "customer": payload.customer,
+                "plan": {"amount": cents}
+            }
+        }
+    }
+    res = stripe_bridge.handle_webhook_event(fake_event)
+    return res
+
+
+@app.post("/api/research/audit-url")
+async def audit_url_endpoint(payload: UrlAuditRequest):
+    """Audits any live URL in real-time."""
+    result = LiveResearchEngine.audit_url(payload.url)
+    return result
+
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_cockpit_dashboard():
-    """Serves the main interactive AEGIS Cockpit UI."""
     index_path = "/home/user/aegis/templates/index.html"
     if os.path.exists(index_path):
         with open(index_path, "r", encoding="utf-8") as f:
