@@ -6,6 +6,7 @@ Policy: 'Knowledge compounds. Undocumented knowledge is lost capital.'
 
 import json
 import os
+from pathlib import Path
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 from aegis.core.models import KnowledgeEntry, KnowledgeCategoryEnum
@@ -16,8 +17,9 @@ class KnowledgeBase:
     Manages structured organizational memory and compounding insights.
     """
 
-    def __init__(self, storage_path: str = "/home/user/aegis/data/knowledge_base.json"):
-        self.storage_path = storage_path
+    def __init__(self, storage_path: Optional[str] = None):
+        data_dir = Path(os.getenv("AEGIS_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
+        self.storage_path = storage_path or str(data_dir / "knowledge_base.json")
         self.entries: List[KnowledgeEntry] = []
         self._load()
 

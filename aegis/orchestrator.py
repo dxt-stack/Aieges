@@ -6,6 +6,7 @@ Observe -> Analyze -> Discover -> Prioritize -> Plan -> Build -> Deploy -> Measu
 
 import os
 import time
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 from aegis.core.utils import utc_now_iso
@@ -36,11 +37,16 @@ class AegisOrchestrator:
     enforces survival constraints, and executes the Value Creation Loop.
     """
 
-    def __init__(self, workspace_root: str = "/home/user/aegis"):
-        self.workspace_root = workspace_root
-        self.state_mgr = StateManager()
-        self.knowledge_base = KnowledgeBase()
-        self.governance = GovernanceManager()
+    def __init__(self, workspace_root: Optional[str] = None):
+        self.workspace_root = workspace_root or os.getenv("AEGIS_WORKSPACE", str(Path(__file__).resolve().parent))
+        data_dir = os.path.join(self.workspace_root, "data")
+        self.state_mgr = StateManager(
+            state_file=os.path.join(data_dir, "system_state.json"),
+            ventures_file=os.path.join(data_dir, "ventures.json"),
+            opps_file=os.path.join(data_dir, "opportunities.json"),
+        )
+        self.knowledge_base = KnowledgeBase(storage_path=os.path.join(data_dir, "knowledge_base.json"))
+        self.governance = GovernanceManager(storage_path=os.path.join(data_dir, "governance.json"))
 
         # Instantiate the 6 autonomous divisions
         self.research_div = ResearchDivision()

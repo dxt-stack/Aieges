@@ -32,7 +32,7 @@ security = HTTPBearer(auto_error=False)
 
 # In-memory data store for self-contained execution
 ACCOUNTS_DB: Dict[str, Dict[str, Any]] = {
-    "demo_token_123": {
+    "local_demo_token": {
         "account_id": "acc_demo",
         "plan": "Professional",
         "quota_limit": 15000,
@@ -61,9 +61,9 @@ class IngestTaskResponse(BaseModel):
 async def verify_api_key(credentials: HTTPAuthorizationCredentials = Security(security)):
     if not credentials:
         # Fallback to demo mode for testing
-        return "demo_token_123"
+        return "local_demo_token"
     token = credentials.credentials
-    if token not in ACCOUNTS_DB and token != "demo_token_123":
+    if token not in ACCOUNTS_DB and token != "local_demo_token":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired API Key. Acquire key from customer portal."
@@ -86,8 +86,8 @@ async def health_check():
     return {
         "status": "HEALTHY",
         "timestamp": time.time(),
-        "database": "CONNECTED",
-        "worker_pool_active": True
+        "database": "IN_MEMORY",
+        "worker_pool_active": False
     }
 
 
@@ -108,7 +108,7 @@ async def process_task(request: IngestTaskRequest, token: str = Depends(verify_a
     processed_result = {
         "extracted_keys_count": len(request.payload.keys()),
         "normalized_fields": {k.upper(): str(v) for k, v in request.payload.items()},
-        "confidence_score": 0.998,
+        "confidence_score": None,
         "classification": "SaaS",
         "processed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ")
     }
@@ -137,9 +137,9 @@ async def process_task(request: IngestTaskRequest, token: str = Depends(verify_a
 async def get_service_metrics():
     return {
         "service": "CloudCostSentinel",
-        "total_tasks_processed": len(TASKS_DB) + 1420,
-        "average_latency_ms": 1.14,
-        "sla_uptime_percent": 99.98,
+        "total_tasks_processed": len(TASKS_DB),
+        "average_latency_ms": round(sum(t["latency_ms"] for t in TASKS_DB) / len(TASKS_DB), 2) if TASKS_DB else 0.0,
+        "sla_uptime_percent": None,
         "active_accounts": len(ACCOUNTS_DB)
     }
 

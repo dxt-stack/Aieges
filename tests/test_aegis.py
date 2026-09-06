@@ -211,7 +211,7 @@ def test_governance_escalation():
 
 
 def test_aegis_orchestrator_cycle():
-    orchestrator = AegisOrchestrator(workspace_root="/home/user/aegis")
+    orchestrator = AegisOrchestrator(workspace_root="/tmp/aegis-test-workspace")
     result = orchestrator.execute_single_loop_cycle()
 
     assert result["status"] == "HEALTHY"

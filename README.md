@@ -1,96 +1,115 @@
-# AEGIS — Autonomous Economic Growth & Intelligent Survival System
+# AEGIS
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-white.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-black.svg?logo=fastapi)](https://fastapi.tiangolo.com)
-[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-d4af37.svg)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/tests-passing-white.svg)]()
-[![Design](https://img.shields.io/badge/Theme-Monochrome%20%2B%20NAB%20Gold-d4af37.svg)]()
+### Autonomous Economic Growth & Intelligent Survival System
 
-> **"Money is survival. Cash reserves are life support. Revenue is oxygen. Profitability is health. Financial collapse is existential failure."**
+AEGIS is a self-hosted command center for turning business ideas into measurable, documented, and governable software ventures.
 
-AEGIS is a self-directed economic organism designed to autonomously discover, evaluate, scaffold, document, and manage legal recurring value-producing systems and software ventures with zero unnecessary human labor.
+It brings treasury awareness, opportunity evaluation, venture scaffolding, operational memory, and human approval boundaries into one focused system.
 
----
+![AEGIS dashboard preview](https://raw.githubusercontent.com/dxt-stack/Aieges/public-release-hardening/docs/assets/aegis-dashboard.svg)
 
-## 🛡️ Core Architecture
+> **Build durable value. Protect the downside. Keep humans in control of consequential decisions.**
 
-```
-+========================================================================================+
-|                                      AEGIS v1.0                                        |
-+========================================================================================+
-|                                                                                        |
-|  [ TREASURY (Life Support) ] <---------> [ SURVIVAL STATE MACHINE (Posture Gauge) ]    |
-|   - Liquid Cash Reserves                  - CRITICAL (<30d)                            |
-|   - Burn Rate & MRR                       - WARNING (30-90d)                           |
-|   - Net Runway Telemetry                  - STABLE (3-12mo) / STRONG / FORTRESS        |
-|                                                                                        |
-|  +----------------------------------------------------------------------------------+  |
-|  |                        VALUE CREATION AUTONOMOUS LOOP                            |  |
-|  |  Observe -> Analyze -> Discover -> Prioritize -> Plan -> Build -> Deploy -> ... |  |
-|  +----------------------------------------------------------------------------------+  |
-|                                                                                        |
-|  +----------------------------------------------------------------------------------+  |
-|  |                           6 AUTONOMOUS DIVISIONS                                 |  |
-|  |  [ Research ] [ Product ] [ Engineering ] [ Marketing ] [ Operations ] [ Finance ] |  |
-|  +----------------------------------------------------------------------------------+  |
-|                                                                                        |
-|  [ OPPORTUNITY SCORER (EV/RAROE) ]  [ DECISION FILTER (5 Qs) ]  [ 16-DOC GENERATOR ]   |
-|                                                                                        |
-|  [ STRIPE REVENUE BRIDGE ] <-------------> [ KNOWLEDGE BASE ] <-> [ GOVERNANCE QUEUE ]|
-+========================================================================================+
+## Why AEGIS exists
+
+Most early ventures lose context between spreadsheets, product notes, dashboards, and deployment scripts. AEGIS keeps those decisions connected. It shows the current financial posture, ranks opportunities against explicit criteria, creates a documented starting point for the next venture, and records what the system learned.
+
+The operating loop is simple:
+
+```text
+Observe → Analyze → Discover → Prioritize → Plan → Build → Measure → Improve
 ```
 
----
+AEGIS is intentionally not a black-box money machine. It is a transparent operating system for disciplined experimentation and automation. It does not sign contracts, move money, change ownership, or make regulatory decisions without a human governor.
 
-## ⚡ Real & Active Capabilities
+## The cockpit
 
-1. **Survival State Machine**: Dynamic tactical posture shifts (`CRITICAL`, `WARNING`, `STABLE`, `STRONG`, `FORTRESS`) based on treasury runway calculations.
-2. **Real Web Research Scraper**: Live URL competitor audits, extracting headings, meta tags, pricing signals, and competitive weaknesses.
-3. **Stripe Revenue Bridge**: Real webhook handler for `invoice.payment_succeeded`, `customer.subscription.deleted`, and `charge.refunded` that updates Treasury cash reserves and MRR in real time.
-4. **Runnable Micro-SaaS Code Generator**: Automatically generates working FastAPI microservices (`app.py`), Dockerfiles, and test suites alongside the 16 markdown documents.
-5. **Background Autonomous Daemon**: Continuous background loop checking telemetry, evaluating opportunities, and maintaining resilience.
-6. **Compounding Knowledge Ledger**: Persistent memory for decisions, experiments, and lessons learned.
-7. **Minimalist Black/White & NAB Beige Theme**: Executive fintech aesthetic with high-contrast monochrome design and warm beige/yellow accents.
+The dashboard is designed as a high-contrast fintech command center: monochrome surfaces, warm gold telemetry, cyan signal highlights, animated grid and scanline layers, live posture indicators, and reduced-motion support for accessibility.
 
----
+The main views answer practical questions:
 
-## 🚀 Quickstart
+- **How much runway is left?** Treasury data is translated into a survival posture.
+- **What deserves attention next?** Opportunities are ranked using expected value, capital efficiency, timing, risk, and defensibility.
+- **What has already been tried?** Decisions, assumptions, outcomes, failures, and lessons remain in a searchable knowledge ledger.
+- **What needs a human?** Banking, legal, regulatory, ownership, and other high-impact actions appear in a governance queue.
 
-### 1. Installation
+## Current capabilities
+
+| Capability | Purpose |
+| --- | --- |
+| Treasury posture | Monitor reserves, burn, revenue, net burn, and runway. |
+| Opportunity engine | Compare possible products and rank them against explicit economic criteria. |
+| Venture factory | Generate a documented venture workspace with a starter FastAPI service, Dockerfile, tests, and operating artifacts. |
+| Public-market research | Inspect allowed public webpages for metadata, headings, pricing signals, and keyword clues. |
+| Revenue bridge | Process supported Stripe event payloads and update internal telemetry after signature verification is configured. |
+| Governance queue | Keep consequential actions visible for human review. |
+| Knowledge ledger | Preserve the reasoning and lessons that make future cycles better. |
+
+## Try it locally
+
 ```bash
 git clone https://github.com/dxt-stack/Aieges.git
 cd Aieges
-pip install -r requirements.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python -m uvicorn aegis.api:app --host 127.0.0.1 --port 8000
 ```
 
-### 2. Run the Web Cockpit Dashboard
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) to enter the cockpit. The interactive API reference is available at `/docs`.
+
+For a quick command-line view:
+
 ```bash
-python3 -m uvicorn aegis.api:app --host 0.0.0.0 --port 8000
+python aegis-cli.py status
+python aegis-cli.py venture list
 ```
-Open `http://localhost:8000` in your browser.
 
-### 3. CLI Automation
+## Safety before deployment
+
+AEGIS is ready for public collaboration as an honest prototype. It is not yet production financial infrastructure. Before exposing it beyond a private machine:
+
+- Set `AEGIS_API_KEY` so state-changing requests require `X-Aegis-Key`.
+- Restrict `AEGIS_CORS_ORIGINS` to trusted origins.
+- Set `STRIPE_WEBHOOK_SECRET` before accepting payment events.
+- Run behind TLS, rate limiting, edge authentication, logging, and a process supervisor.
+- Treat the JSON data files as local development storage, not a multi-user database.
+- Review every generated venture for security, privacy, legal, and operational readiness.
+
+Read [SECURITY.md](SECURITY.md) for the deployment boundary and responsible disclosure process.
+
+## Project map
+
+The code is organized around a small number of responsibilities rather than a large framework:
+
+```text
+aegis/
+├── api.py                 FastAPI application and cockpit routes
+├── orchestrator.py        Value-creation loop coordinator
+├── core/                  Models, state, scoring, decisions, and memory
+├── divisions/             Research, product, engineering, marketing, operations, finance
+├── integrations/          Research, Stripe handling, and venture generation
+├── data/                  Local example state
+├── templates/             Animated cockpit interface
+└── ventures/              Generated venture workspaces
+```
+
+## Quality checks
+
 ```bash
-# Check organism status
-./aegis-cli.py status
-
-# Run autonomous value creation cycles
-./aegis-cli.py loop --cycles 3
-
-# List all ventures in portfolio
-./aegis-cli.py venture list
-
-# Initialize a new venture with software bundle and 16 docs
-./aegis-cli.py venture new --name "AgentPulse" --category "SaaS" --mrr 25000
+python -m compileall -q aegis aegis-cli.py
+python -m pytest -q
 ```
 
-### 4. Running Test Suites
-```bash
-PYTHONPATH=. pytest tests/ -v
-PYTHONPATH=aegis/ventures/docuflow pytest aegis/ventures/docuflow/test_app.py -v
-```
+Continuous integration runs the same checks on supported Python versions. Contributions should include regression coverage and should never include credentials, customer data, or runtime state.
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
 
-## 📄 License
-MIT License. Built for long-term sustainable value creation.
+## Status
+
+AEGIS is an actively evolving prototype for transparent venture operations, economic experimentation, and human-governed automation. The project favors explicit assumptions, observable state, reversible actions, and durable documentation over claims of full autonomy.
+
+## License
+
+AEGIS is released under the [MIT License](LICENSE).

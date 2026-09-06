@@ -11,6 +11,7 @@ Handles human approvals strictly when required by charter:
 
 import json
 import os
+from pathlib import Path
 from typing import List, Optional
 from aegis.core.utils import utc_now_iso
 from aegis.core.models import GovernanceItem, GovernanceTypeEnum, GovernanceStatusEnum
@@ -21,8 +22,9 @@ class GovernanceManager:
     Manages human governance escalation queues.
     """
 
-    def __init__(self, storage_path: str = "/home/user/aegis/data/governance.json"):
-        self.storage_path = storage_path
+    def __init__(self, storage_path: Optional[str] = None):
+        data_dir = Path(os.getenv("AEGIS_DATA_DIR", Path(__file__).resolve().parent / "data"))
+        self.storage_path = storage_path or str(data_dir / "governance.json")
         self.items: List[GovernanceItem] = []
         self._load()
 

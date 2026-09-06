@@ -7,6 +7,8 @@ import urllib.request
 import urllib.parse
 import json
 import re
+import socket
+import ipaddress
 from typing import Dict, Any, List
 from bs4 import BeautifulSoup
 
@@ -23,6 +25,15 @@ class LiveResearchEngine:
         """
         if not target_url.startswith("http://") and not target_url.startswith("https://"):
             target_url = "https://" + target_url
+        parsed = urllib.parse.urlparse(target_url)
+        if parsed.username or parsed.password or not parsed.hostname:
+            raise ValueError("Research targets must be public HTTP(S) URLs without embedded credentials")
+        try:
+            addresses = socket.getaddrinfo(parsed.hostname, parsed.port or 443, type=socket.SOCK_STREAM)
+            if any(ipaddress.ip_address(item[4][0]).is_private or ipaddress.ip_address(item[4][0]).is_loopback or ipaddress.ip_address(item[4][0]).is_link_local for item in addresses):
+                raise ValueError("Private, loopback, and link-local research targets are not allowed")
+        except socket.gaierror as exc:
+            raise ValueError(f"Unable to resolve research target: {exc}") from exc
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AEGIS-Market-Intelligence/1.0"
@@ -31,7 +42,7 @@ class LiveResearchEngine:
         try:
             req = urllib.request.Request(target_url, headers=headers)
             with urllib.request.urlopen(req, timeout=8) as response:
-                html_content = response.read().decode('utf-8', errors='ignore')
+                html_content = response.read(2_000_000).decode('utf-8', errors='ignore')
                 status_code = response.getcode()
         except Exception as e:
             return {
