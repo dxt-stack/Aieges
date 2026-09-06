@@ -63,7 +63,7 @@ def main():
     treasury_parser.add_argument("--revenue", type=float, help="Monthly revenue ($)")
 
     args = parser.parse_args()
-    orchestrator = AegisOrchestrator(workspace_root="/home/user/aegis")
+    orchestrator = AegisOrchestrator(workspace_root=os.getenv("AEGIS_WORKSPACE"))
 
     if args.command == "status" or not args.command:
         state = orchestrator.state_mgr.state

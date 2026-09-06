@@ -5,6 +5,7 @@ Maintains persistent system telemetry, treasury reserves, survival states, and a
 
 import json
 import os
+from pathlib import Path
 from typing import Dict, Any, Optional
 from aegis.core.utils import utc_now_iso
 from aegis.core.models import SystemState, Treasury, SurvivalStateEnum, Venture, Opportunity
@@ -15,10 +16,11 @@ class StateManager:
     Coordinates persistent storage and state evaluation for AEGIS.
     """
 
-    def __init__(self, state_file: str = "/home/user/aegis/data/system_state.json", ventures_file: str = "/home/user/aegis/data/ventures.json", opps_file: str = "/home/user/aegis/data/opportunities.json"):
-        self.state_file = state_file
-        self.ventures_file = ventures_file
-        self.opps_file = opps_file
+    def __init__(self, state_file: Optional[str] = None, ventures_file: Optional[str] = None, opps_file: Optional[str] = None):
+        data_dir = Path(os.getenv("AEGIS_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
+        self.state_file = state_file or str(data_dir / "system_state.json")
+        self.ventures_file = ventures_file or str(data_dir / "ventures.json")
+        self.opps_file = opps_file or str(data_dir / "opportunities.json")
         
         self.state: SystemState = SystemState()
         self.ventures: Dict[str, Venture] = {}

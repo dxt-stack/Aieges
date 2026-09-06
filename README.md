@@ -1,96 +1,109 @@
-# AEGIS — Autonomous Economic Growth & Intelligent Survival System
+# AEGIS
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-white.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-black.svg?logo=fastapi)](https://fastapi.tiangolo.com)
-[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-d4af37.svg)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/tests-passing-white.svg)]()
-[![Design](https://img.shields.io/badge/Theme-Monochrome%20%2B%20NAB%20Gold-d4af37.svg)]()
+## Autonomous Economic Growth & Intelligent Survival System
 
-> **"Money is survival. Cash reserves are life support. Revenue is oxygen. Profitability is health. Financial collapse is existential failure."**
+AEGIS is a self-hosted Python/FastAPI control plane for evaluating business opportunities, monitoring treasury runway, scaffolding small software ventures, and recording operational decisions. It is an **experimental decision-support and automation platform**, not an autonomous financial adviser, payment processor, or guarantee of revenue.
 
-AEGIS is a self-directed economic organism designed to autonomously discover, evaluate, scaffold, document, and manage legal recurring value-producing systems and software ventures with zero unnecessary human labor.
+> Money is survival. Cash reserves are life support. Revenue is oxygen. Profitability is health.
 
----
+The project is designed around a value-creation loop:
 
-## 🛡️ Core Architecture
-
-```
-+========================================================================================+
-|                                      AEGIS v1.0                                        |
-+========================================================================================+
-|                                                                                        |
-|  [ TREASURY (Life Support) ] <---------> [ SURVIVAL STATE MACHINE (Posture Gauge) ]    |
-|   - Liquid Cash Reserves                  - CRITICAL (<30d)                            |
-|   - Burn Rate & MRR                       - WARNING (30-90d)                           |
-|   - Net Runway Telemetry                  - STABLE (3-12mo) / STRONG / FORTRESS        |
-|                                                                                        |
-|  +----------------------------------------------------------------------------------+  |
-|  |                        VALUE CREATION AUTONOMOUS LOOP                            |  |
-|  |  Observe -> Analyze -> Discover -> Prioritize -> Plan -> Build -> Deploy -> ... |  |
-|  +----------------------------------------------------------------------------------+  |
-|                                                                                        |
-|  +----------------------------------------------------------------------------------+  |
-|  |                           6 AUTONOMOUS DIVISIONS                                 |  |
-|  |  [ Research ] [ Product ] [ Engineering ] [ Marketing ] [ Operations ] [ Finance ] |  |
-|  +----------------------------------------------------------------------------------+  |
-|                                                                                        |
-|  [ OPPORTUNITY SCORER (EV/RAROE) ]  [ DECISION FILTER (5 Qs) ]  [ 16-DOC GENERATOR ]   |
-|                                                                                        |
-|  [ STRIPE REVENUE BRIDGE ] <-------------> [ KNOWLEDGE BASE ] <-> [ GOVERNANCE QUEUE ]|
-+========================================================================================+
+```text
+Observe → Analyze → Discover → Prioritize → Plan → Build → Measure → Improve
 ```
 
----
+## What works today
 
-## ⚡ Real & Active Capabilities
+| Area | Current behavior |
+| --- | --- |
+| Treasury | Calculates net burn, runway, and survival posture from persisted JSON state. |
+| Opportunity scoring | Scores opportunities using revenue potential, capital, timing, risk, scalability, and defensibility. |
+| Venture scaffolding | Generates a documentation suite, FastAPI service, Dockerfile, and tests for a venture. |
+| Dashboard | Provides a dark fintech command center with animated grid, scanline, glow, telemetry, and accessible reduced-motion support. |
+| Research | Audits public HTTP(S) pages for metadata, headings, pricing clues, and keyword signals. Private, loopback, link-local, and credential-bearing targets are rejected. |
+| Stripe bridge | Handles supported event payloads and verifies the Stripe signature when `STRIPE_WEBHOOK_SECRET` is configured. |
+| Governance | Records actions that require human approval, including banking, legal, regulatory, and ownership decisions. |
+| Knowledge ledger | Persists decisions, assumptions, experiments, outcomes, failures, and lessons. |
 
-1. **Survival State Machine**: Dynamic tactical posture shifts (`CRITICAL`, `WARNING`, `STABLE`, `STRONG`, `FORTRESS`) based on treasury runway calculations.
-2. **Real Web Research Scraper**: Live URL competitor audits, extracting headings, meta tags, pricing signals, and competitive weaknesses.
-3. **Stripe Revenue Bridge**: Real webhook handler for `invoice.payment_succeeded`, `customer.subscription.deleted`, and `charge.refunded` that updates Treasury cash reserves and MRR in real time.
-4. **Runnable Micro-SaaS Code Generator**: Automatically generates working FastAPI microservices (`app.py`), Dockerfiles, and test suites alongside the 16 markdown documents.
-5. **Background Autonomous Daemon**: Continuous background loop checking telemetry, evaluating opportunities, and maintaining resilience.
-6. **Compounding Knowledge Ledger**: Persistent memory for decisions, experiments, and lessons learned.
-7. **Minimalist Black/White & NAB Beige Theme**: Executive fintech aesthetic with high-contrast monochrome design and warm beige/yellow accents.
+AEGIS deliberately keeps consequential actions inside a human governance boundary. It does not autonomously sign contracts, move money, change ownership, or make regulatory attestations.
 
----
+## Quick start
 
-## 🚀 Quickstart
-
-### 1. Installation
 ```bash
 git clone https://github.com/dxt-stack/Aieges.git
 cd Aieges
-pip install -r requirements.txt
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python -m uvicorn aegis.api:app --host 127.0.0.1 --port 8000
 ```
 
-### 2. Run the Web Cockpit Dashboard
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). API documentation is available at `/docs`.
+
+For a CLI status check:
+
 ```bash
-python3 -m uvicorn aegis.api:app --host 0.0.0.0 --port 8000
+python aegis-cli.py status
+python aegis-cli.py venture list
+python aegis-cli.py loop --cycles 1
 ```
-Open `http://localhost:8000` in your browser.
 
-### 3. CLI Automation
+## Configuration and deployment safety
+
+The application uses repository-local JSON files by default. Set `AEGIS_WORKSPACE` and `AEGIS_DATA_DIR` for another location. Never place real customer, payment, or personally identifying data in the tracked example files.
+
+For any deployment beyond a private local machine:
+
+1. Set `AEGIS_API_KEY`; state-changing API requests then require the `X-Aegis-Key` header.
+2. Set `AEGIS_CORS_ORIGINS` to an explicit comma-separated origin allowlist.
+3. Set `STRIPE_WEBHOOK_SECRET` before accepting Stripe webhooks.
+4. Put the service behind TLS, authentication at the edge, rate limiting, logging, and a process supervisor.
+5. Review the JSON persistence model before using multiple workers or multiple users.
+
+See [SECURITY.md](SECURITY.md) for the threat model and disclosure process.
+
+## API surface
+
+The dashboard uses the following main routes:
+
+- `GET /api/status` — current treasury, posture, loop, venture, and governance telemetry.
+- `POST /api/loop/execute-step` — run one value-creation cycle.
+- `GET /api/opportunities` and `POST /api/opportunities/evaluate` — list and score opportunities.
+- `POST /api/ventures/create` — generate a venture bundle.
+- `POST /api/research/audit-url` — audit an allowed public URL.
+- `POST /api/stripe/webhook` — receive verified Stripe events when a webhook secret is configured.
+- `POST /api/stripe/simulate` — local development simulator.
+
+## Testing
+
 ```bash
-# Check organism status
-./aegis-cli.py status
-
-# Run autonomous value creation cycles
-./aegis-cli.py loop --cycles 3
-
-# List all ventures in portfolio
-./aegis-cli.py venture list
-
-# Initialize a new venture with software bundle and 16 docs
-./aegis-cli.py venture new --name "AgentPulse" --category "SaaS" --mrr 25000
+python -m compileall -q aegis aegis-cli.py
+python -m pytest -q
 ```
 
-### 4. Running Test Suites
-```bash
-PYTHONPATH=. pytest tests/ -v
-PYTHONPATH=aegis/ventures/docuflow pytest aegis/ventures/docuflow/test_app.py -v
-```
+The repository includes core orchestration tests and tests for both checked-in generated venture services.
 
----
+## Architecture
 
-## 📄 License
-MIT License. Built for long-term sustainable value creation.
+| Module | Responsibility |
+| --- | --- |
+| `aegis/api.py` | FastAPI application and dashboard endpoints. |
+| `aegis/orchestrator.py` | Coordinates the value-creation loop. |
+| `aegis/core/` | Models, state, scoring, decision filters, documents, and knowledge. |
+| `aegis/divisions/` | Research, product, engineering, marketing, operations, and finance directives. |
+| `aegis/integrations/` | Research, Stripe event handling, and venture code generation. |
+| `aegis/data/` | Local example state and seeded demo records. |
+| `aegis/templates/index.html` | The animated AEGIS cockpit dashboard. |
+
+## Project status and limitations
+
+AEGIS is ready for public collaboration as a transparent prototype, not as production financial infrastructure. JSON files are not a multi-user database. The daemon is process-local. The Stripe bridge updates internal telemetry but does not replace Stripe SDK signature verification, idempotency storage, accounting reconciliation, or payment-provider controls. Generated ventures are starter services and require an independent security, privacy, legal, and operational review before deployment.
+
+## License
+
+MIT. See [LICENSE](LICENSE) if present in the repository.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

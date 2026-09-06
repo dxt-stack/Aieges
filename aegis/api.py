@@ -10,8 +10,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 import os
-
+import hashlib
+import hmac
 import time
+from pathlib import Path
 from aegis.orchestrator import AegisOrchestrator
 from aegis.core.models import (
     SurvivalStateEnum, RevenuePriorityEnum, GovernanceTypeEnum,
@@ -33,18 +35,30 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=[origin.strip() for origin in os.getenv("AEGIS_CORS_ORIGINS", "http://localhost:8000").split(",") if origin.strip()],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-static_dir = "/home/user/aegis/static"
+
+@app.middleware("http")
+async def protect_mutations(request: Request, call_next):
+    """Protect state-changing routes when AEGIS_API_KEY is configured."""
+    configured_key = os.getenv("AEGIS_API_KEY")
+    if configured_key and request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        supplied_key = request.headers.get("X-Aegis-Key", "")
+        if not hmac.compare_digest(supplied_key, configured_key):
+            return JSONResponse({"detail": "Missing or invalid X-Aegis-Key"}, status_code=401)
+    return await call_next(request)
+
+workspace_root = os.getenv("AEGIS_WORKSPACE", str(Path(__file__).resolve().parent))
+static_dir = os.path.join(workspace_root, "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Initialize Orchestrator, Stripe Bridge, and Daemon singletons
-orchestrator = AegisOrchestrator(workspace_root="/home/user/aegis")
+orchestrator = AegisOrchestrator(workspace_root=workspace_root)
 stripe_bridge = StripeBridge(orchestrator)
 daemon = AegisDaemon(orchestrator, interval_seconds=45)
 
@@ -376,8 +390,24 @@ async def execute_division_directive(division_name: str, payload: DivisionExecut
 @app.post("/api/stripe/webhook")
 async def receive_stripe_webhook(request: Request):
     """Receives live Stripe webhooks."""
+    raw_body = await request.body()
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+    signature = request.headers.get("Stripe-Signature")
+    if webhook_secret:
+        if not signature:
+            raise HTTPException(status_code=400, detail="Missing Stripe-Signature header")
+        timestamp = next((part[2:] for part in signature.split(",") if part.startswith("t=")), None)
+        signatures = [part[2:] for part in signature.split(",") if part.startswith("v1=")]
+        signed_payload = f"{timestamp}.{raw_body.decode('utf-8')}" if timestamp else ""
+        expected = hmac.new(webhook_secret.encode(), signed_payload.encode(), hashlib.sha256).hexdigest()
+        try:
+            timestamp_valid = timestamp is not None and abs(time.time() - int(timestamp)) <= 300
+        except ValueError:
+            timestamp_valid = False
+        if not timestamp_valid or not signatures or not any(hmac.compare_digest(expected, item) for item in signatures):
+            raise HTTPException(status_code=400, detail="Invalid Stripe webhook signature")
     try:
-        payload = await request.json()
+        payload = __import__("json").loads(raw_body)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
     
@@ -409,13 +439,16 @@ async def simulate_stripe_event(payload: StripeSimulateRequest):
 @app.post("/api/research/audit-url")
 async def audit_url_endpoint(payload: UrlAuditRequest):
     """Audits any live URL in real-time."""
-    result = LiveResearchEngine.audit_url(payload.url)
+    try:
+        result = LiveResearchEngine.audit_url(payload.url)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     return result
 
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_cockpit_dashboard():
-    index_path = "/home/user/aegis/templates/index.html"
+    index_path = os.path.join(workspace_root, "templates", "index.html")
     if os.path.exists(index_path):
         with open(index_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read(), status_code=200)
