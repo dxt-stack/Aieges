@@ -6,7 +6,7 @@ AEGIS is a self-hosted command center for turning business ideas into measurable
 
 It brings treasury awareness, opportunity evaluation, venture scaffolding, operational memory, and human approval boundaries into one focused system.
 
-![AEGIS dashboard preview](https://raw.githubusercontent.com/dxt-stack/Aieges/main/docs/assets/aegis-dashboard.svg)
+![AEGIS dashboard preview](docs/assets/aegis-dashboard.svg)
 
 > **Build durable value. Protect the downside. Keep humans in control of consequential decisions.**
 
